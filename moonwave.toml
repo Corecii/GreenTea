@@ -21,12 +21,12 @@ tagline = ""
 # hideableSidebar = true
 
 [[navbar.items]]
-href = "Development"
+href = "/Development"
 label = "Development"
 position = "left"
 
 [[navbar.items]]
-href = "Development#doc-comments"
+href = "/Development#doc-comments"
 label = "(the / before newlines is not a bug)"
 position = "right"
 
