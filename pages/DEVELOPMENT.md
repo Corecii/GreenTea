@@ -10,7 +10,7 @@
 ## Upgrading
 
 Ideally all major versions of GreenTea should use the same internal objects so that
-`GreenTea.isGreenTeaType` is true across all objects. This creates a splot between major versions:
+`GreenTea.isGreenTeaType` is true across all objects. This creates a split between major versions:
 - "major-major" versions: these have breaking changes that don't allow us to unify the objects types
 - "major-minor" versions: these have breaking changes that allow us to unify the objects types
 
@@ -69,9 +69,9 @@ This poses a problem for newlines: luau-lsp only works with `\` for newlines, bu
 
 For now, we combine these two. This makes the moonwave docs look funny, because it won't omit the `\` before newlines, but 🤷‍♀️ what can you do.
 
-# License Credits
+## License Credits
 
-## Favicon
+### Favicon
 
 The favicon is [from Microsoft's emoji set, under the MIT license.](https://github.com/microsoft/fluentui-emoji/blob/main/LICENSE)
 
