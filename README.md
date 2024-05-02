@@ -1,7 +1,7 @@
 # 🍵 GreenTea
 An experimental runtime typechecker for Roblox Luau, with matching 'tooling-time' Luau types.
 
-[Docs](https://corecii.github.io/greentea/)
+[Docs](https://corecii.github.io/GreenTea/)
 
 ## Features
 - Check types at runtime (like [the t package](https://github.com/osyrisrblx/t))
