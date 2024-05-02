@@ -27,7 +27,7 @@ For example, say we want to change `GreenTea.string({ graphemes = "..." })` from
 In this manner, `v1.0.1`'s internal objects are exactly the same as `v2.0.0`'s, and they'll be
 `GreenTea.isGreenTeaType` compatible.
 
-## Major-major Versions
+### Major-major Versions
 
 For these, it's mostly like a typical major upgrade, except we should make `GreenTea.typeof` take in previous versions' types and convert them. This gives an option for libraries expecting GreenTea types
 to compose with libraries that use previous versions.
