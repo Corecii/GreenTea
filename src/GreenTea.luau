@@ -553,6 +553,11 @@ end
 
 --- Formats the type for display to the user highlighting a specific type.
 function Type.formatErr(self: Type, cause: Cause): string
+	-- By the way, this is kind of hacky and not really the right way to do
+	-- this. Got to replace formatting entirely with something more made for it
+	-- someday. But this does the job for now, and its internals aren't exposed,
+	-- so we can replace it later!
+
 	local header = "type error"
 
 	local headerErr = cause.errs[1]
@@ -575,7 +580,7 @@ function Type.formatErr(self: Type, cause: Cause): string
 	formattedStr = `\n{formattedStr}\n`
 
 	local order = {}
-	for numStr in formattedStr:gmatch("$$error(%d+)$:") do
+	for numStr in formattedStr:gmatch("%$%$error(%d+)%$:") do
 		local num = tonumber(numStr) :: number
 		table.insert(order, num)
 	end
@@ -584,11 +589,11 @@ function Type.formatErr(self: Type, cause: Cause): string
 		local index = order[orderIndex]
 		local err = cause.errs[index]
 		formattedStr = formattedStr:gsub(
-			`([^\n]*)$$error{index}$:(.*):$error{index}$$([^\n]*)\n([^\n]*)`,
-			function(pre: string, mid: string, post: string, nextLine: string)
+			`([^\n]*)$$error{index}$:(.*):$error{index}$$([^\n]*)\n(.*)$`,
+			function(pre: string, mid: string, post: string, everythingElse: string)
 				local errPointer
 				if mid:find("\n", 1, true) == nil then
-					local preNoAnnotations = pre:gsub("$$error%d+$:", ""):gsub(":$error%d+$$", "")
+					local preNoAnnotations = pre:gsub("%$%$error%d+%$:", ""):gsub(":%$error%d+%$%$", "")
 					errPointer = (" "):rep(#preNoAnnotations) .. ("^"):rep(#mid)
 				else
 					local realStr = `{pre}{mid}{post}`
@@ -599,17 +604,38 @@ function Type.formatErr(self: Type, cause: Cause): string
 				end
 
 				if err.message then
-					local errMessage = err.message:gsub("$input", displayInputType(headerErr.input))
-					errPointer = `{errPointer} {errMessage}`
+					errPointer = `{errPointer} $$error{index}$$`
 				end
 
-				if nextLine:match("^%s*^") then
-					return `{pre}{mid}{post}\n{nextLine}\n{errPointer}\n`
+				local preLines = {}
+
+				while true do
+					local nextLine, newEverythingElse = everythingElse:match("^([^\n]*)\n(.*)$")
+					if not (nextLine and newEverythingElse) then
+						break
+					end
+					if nextLine:match("^%s*^") then
+						table.insert(preLines, nextLine)
+						everythingElse = newEverythingElse
+					else
+						break
+					end
+				end
+
+				if preLines[1] then
+					return `{pre}{mid}{post}\n{table.concat(preLines, "\n")}\n{errPointer}\n{everythingElse}`
 				else
-					return `{pre}{mid}{post}\n{errPointer}\n{nextLine}`
+					return `{pre}{mid}{post}\n{errPointer}\n{everythingElse}`
 				end
 			end :: any
 		)
+	end
+	
+	for index, err in cause.errs do
+		if err.message then
+			local errMessage = err.message:gsub("$input", displayInputType(err.input))
+			formattedStr = formattedStr:gsub(`%$%$error{index}%$%$`, errMessage)
+		end
 	end
 
 	formattedStr = formattedStr:gsub(
@@ -619,7 +645,7 @@ function Type.formatErr(self: Type, cause: Cause): string
 				return nil
 			end
 
-			return `\n{spaces}{carets}\n{string.rep(" ", #spaces)}{errMessage}\n`
+			return `\n{spaces}{carets}\n{string.rep(" ", #spaces)}{errMessage}`
 		end :: any
 	)
 
