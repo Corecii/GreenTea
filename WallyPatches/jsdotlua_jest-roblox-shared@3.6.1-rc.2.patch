@@ -1,0 +1,13 @@
+diff --git a/jest-roblox-shared/src/Writeable.lua b/jest-roblox-shared/src/Writeable.lua
+index fb54b45..379f8b8 100644
+--- a/jest-roblox-shared/src/Writeable.lua
++++ b/jest-roblox-shared/src/Writeable.lua
+@@ -30,6 +30,8 @@ function Writeable.new(options: { write: (data: string) -> () }?): Writeable
+ end
+ 
+ function Writeable:write(data: string)
++	-- strip terminal formatting sequences which display badly in Roblox Studio
++	data = string.gsub(data, "\27%[%d+m", "")
+ 	self._writeFn(data)
+ end
+ 

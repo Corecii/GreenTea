@@ -1,0 +1,19 @@
+{
+	"name": "greentea-test",
+	"tree": {
+		"$className": "DataModel",
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+			"test": {
+				"$path": "test"
+			},
+			"DevPackages": {
+				"$path": "DevPackages"
+			},
+			"GreenTea": {
+				"$path": "src"
+			}
+		}
+
+	}
+}

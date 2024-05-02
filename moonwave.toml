@@ -1,0 +1,42 @@
+title = "GreenTea"  # From Git
+gitRepoUrl = "https://github.com/corecii/greentea" # From Git
+
+gitSourceBranch = "main"
+changelog = true
+classOrder = []
+
+[docusaurus]
+onBrokenLinks = "throw"
+onBrokenMarkdownLinks = "warn"
+# favicon = ""
+
+# From git:
+organizationName = "Shae A."
+projectName = "GreenTea"
+url = "https://corecii.github.io"
+baseUrl = "/GreenTea"
+tagline = ""
+
+[navbar]
+# hideableSidebar = true
+
+[[navbar.items]]
+href = "Development"
+label = "Development"
+position = "left"
+
+[[navbar.items]]
+href = "Development#doc-comments"
+label = "(the / before newlines is not a bug)"
+position = "right"
+
+[footer]
+style = "dark"
+copyright = "Copyright © 2024 Shae A. Built with Moonwave and Docusaurus"
+
+# [[footer.links]]
+# title = "examples"
+
+# [[footer.links]]
+# label = "(the / before newlines is not a bug)"
+# href = "Development#doc-comments"

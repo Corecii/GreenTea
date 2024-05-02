@@ -1,0 +1,25 @@
+[package]
+name = "corecii/greentea"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+# Includes override excludes, and excludes is by default empty.
+# We exclude everything, then include only what we want.
+exclude = ["*"]
+include = [
+	"default.project.json",
+	"src",
+	"src/**",
+	"wally.toml",
+	"README.md",
+	"CHANGELOG.md",
+	"selene.toml",
+	".luaurc",
+]
+
+[dev-dependencies]
+Jest = "jsdotlua/jest@3.6.1-rc.2"
+JestGlobals = "jsdotlua/jest-globals@3.6.1-rc.2"
+
+_jest-roblox-shared = "jsdotlua/jest-roblox-shared@3.6.1-rc.2"
