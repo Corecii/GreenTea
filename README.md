@@ -86,7 +86,7 @@ local catTypeRaw = gt.table({
 	age = gt.number(),
 	meowSound = gt.string(),
 	breed = {
-		[gt.indexer(gt.string())] = gt.number(),
+		[gt.string()] = gt.number(),
 	},
 })
 
@@ -103,7 +103,7 @@ local catTypeChecker = gt.typecast(catTypeRaw)
 
 -- OR we can make it really easy on ourselves if we just use `build` from the beginning:
 
-local catType = gt.build(gt.table({
+local catType = gt.build(gt.table{
 	age = gt.number(),
 	meowSound = gt.string(),
 	breed = {
@@ -154,11 +154,11 @@ end
 -- CatSpawner.luau
 
 local SpawnCat = RemoteWrapper.new({
-	cat = gt.table({
+	cat = {
 		age = gt.number(),
 		meowSound = gt.string(),
 		...
-	}),
+	},
 	location = gt.CFrame(),
 	...
 })
