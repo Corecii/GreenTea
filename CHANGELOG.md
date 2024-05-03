@@ -5,6 +5,7 @@
 - Catch edge case where a GreenTea constructor is passed into a GreenTea constructor
 - Freeze GreenTea and its child tables so they can't be modified
 - Change `basic` types to have a `typeof` or `type` to differentiate them
+- Fix some docs issues
 
 ## 0.1.1
 

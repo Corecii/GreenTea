@@ -382,7 +382,7 @@ Type.__index = Type
 --- Includes a `__tostring` metamethod, which formats to a readable error.
 
 --- @within Type
---- @prop type string
+--- @prop kind string
 
 --- @within Type
 --- @prop basic { typeof: string?, type: string? }?
