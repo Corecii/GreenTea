@@ -4,6 +4,10 @@
 
 Nothing yet!
 
+## 0.3.0
+
+- Change `Type.__call` to return a string cause instead of an object for `t` and `assert` compatibility.
+
 ## 0.2.1
 
 - Add missing `t` members

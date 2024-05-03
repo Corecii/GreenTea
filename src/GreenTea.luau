@@ -496,8 +496,13 @@ local function truncate(count: number, str: string)
 	return str
 end
 
-function Type.__call(self: Type, ...: any): (boolean, Cause)
-	return self:matches(...)
+function Type.__call(self: Type, ...: any): (boolean, string?)
+	local ok, cause = self:matches(...)
+	if ok then
+		return true
+	else
+		return false, tostring(cause)
+	end
 end
 
 function Type.__tostring(self: Type): string

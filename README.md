@@ -22,7 +22,7 @@ Please leave feedback on the issues page. Thank you!
 1. [Install Wally](https://wally.run/install)
 2. Add GreenTea to your `wally.toml`
   - Run `wally add corecii/GreenTea`
-  - _or_ Add `GreenTea = "corecii/GreenTea@0.2.1"` to your `wally.toml`
+  - _or_ Add `GreenTea = "corecii/GreenTea@0.3.0"` to your `wally.toml`
 
 ### Standalone (for non-Rojo)
 - Download from [the Releases page](https://github.com/corecii/greentea/releases)
@@ -177,7 +177,7 @@ end)
 You can include the `greentea-t-standalone` package as an easy, drop-in replacement for a codebase which already uses `t`. Just add it to your `wally.toml`:
 
 ```toml
-t = "corecii/greentea-t-standalone@0.2.1"
+t = "corecii/greentea-t-standalone@0.3.0"
 ```
 
 This package just exports `GreenTea.t` to make drop-in replacement easy.
