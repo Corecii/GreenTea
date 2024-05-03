@@ -126,6 +126,8 @@ t.literal = function(...: any): any
 	end
 end :: TypecheckerConstr<...any>
 
+t.exactly = t.literal
+
 t.keyOf = function(keyType: { [any]: any }): any
 	local union = {}
 	for key, _value in pairs(keyType) do
@@ -163,6 +165,8 @@ t.union = function(...: any)
 	return GreenTea.union(table.unpack(unionArgs))
 end :: TypecheckerConstr<...any>
 
+t.some = t.union
+
 t.intersection = function(...: any): any
 	local intersectionArgs = table.pack(...)
 	for index = 1, intersectionArgs.n do
@@ -170,6 +174,8 @@ t.intersection = function(...: any): any
 	end
 	return GreenTea.intersection(table.unpack(intersectionArgs))
 end :: TypecheckerConstr<...any>
+
+t.every = t.intersection
 
 t.keys = function(check: any): any
 	return GreenTea.dictionary(asGreenTeaType(check), GreenTea.any())
@@ -295,6 +301,8 @@ t.instanceOf = function(className: string, children: { [string]: any }?): any
 		end
 	end, "InstanceOf")
 end :: TypecheckerConstr<string, { [string]: any }?>
+
+t.instance = t.instanceOf
 
 t.instanceIsA = function(className: string, children: { [string]: any }?): any
 	if children then
