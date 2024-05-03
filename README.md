@@ -172,6 +172,16 @@ end)
 
 `GreenTea.t` includes all of the methods from the `t` package. See [the t package's readme](https://github.com/osyrisrblx/t/blob/master/README.md) for more details.
 
+### As a drop-in replacement
+
+You can include the `greentea-t-standalone` package as an easy, drop-in replacement for a codebase which already uses `t`. Just add it to your `wally.toml`:
+
+```toml
+t = "corecii/greentea-t-standalone@0.2.0"
+```
+
+This package just exports `GreenTea.t` to make drop-in replacement easy.
+
 ## Inspiration
 
 This library was largely inspired by `t`, but also my experience working with t types, working with Luau types, and working with systems that need inspectable type definitions. This is my first attempt at solving all of these problems. I'd really like to see the inversion of this library -- where inspectable runtime type definitions are built from Luau types. But that's more work, so I'll leave it as a TODO!
