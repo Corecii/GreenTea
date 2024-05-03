@@ -339,9 +339,7 @@ type TypeRaw = {
 	table: {
 		contents: { [string]: Type },
 		indexer: { key: Type, value: Type }?,
-		metatable: any?,
 
-		respectIter: boolean?,
 		array: boolean?,
 		count: Range?,
 		raw: boolean?,
@@ -421,7 +419,7 @@ Type.__index = Type
 --- @prop fn { args: Type, returns: Type }?
 
 --- @within Type
---- @prop table { contents: { [string]: Type }, indexer: { key: Type, value: Type }, metatable: any?, respectIter: boolean?, array: boolean?, count: Range?, raw: boolean? }?
+--- @prop table { contents: { [string]: Type }, indexer: { key: Type, value: Type }, array: boolean?, count: Range?, raw: boolean? }?
 
 --- @within Type
 --- @prop intersection { contents: { Type } }?
@@ -1515,7 +1513,7 @@ function GreenTea.fn<Args..., Returns...>(args: (Args...) -> (), returns: () -> 
 					argsStr = `(\n{tabFirst(table.concat(argsFormatted, ",\n"))}\n) ->`
 				end
 			end
-			
+
 			local finalItem = returns.tuple.vararg or returns.tuple.contents[#returns.tuple.contents]
 
 			if #returnsFormatted == 0 then
@@ -1560,27 +1558,11 @@ end
 
 export type TuplePacked<T...> = () -> T...
 
-local function iter<K, V>(mode: "pairs" | "iter", tbl: { [K]: V }): () -> (K, V)
-	if mode == "pairs" then
-		return coroutine.wrap(function()
-			for key, value in pairs(tbl) do
-				coroutine.yield(key, value)
-			end
-		end)
-	else
-		return coroutine.wrap(function()
-			for key, value in tbl do
-				coroutine.yield(key, value)
-			end
-		end)
-	end
-end
-
 --- Creates a new GreenTea Type that matches a table.\  
 --- The `contents` table should be a dictionary of string keys to types.\  
 --- An indexer can be provided with `{ [keyGreenTeaType] = valueType }`.\  
---- This will attempt to match metatables as well, but it's only a shallow == comparison.\  
---- Because this attempts to match metatables, it ignores __iter and __index metamethods unless respectIter is specified.\  
+--- This currently respects both `__iter` and `__index` on both the input
+--- `contents` table and tables being checked against.\  
 --- Tables are non-strict by default. Extra values are allowed. If you'd
 --- like to make a table strict, add an indexer that denies extra values, like
 --- `[gt.any()] = gt.never()`.\  
@@ -1595,12 +1577,10 @@ end
 --- and other non-strings. This _will not_ appear correct as a Luau type; it is primarily
 --- intended for compatibility with other runtime typechecking libraries.
 function GreenTea.table<T>(contents: T, options: {
-	respectIter: boolean?,
 	array: boolean?,
 	count: RangeInput?,
 	raw: boolean?,
 }?): T
-	local iterMode: "pairs" | "iter" = if options and options.respectIter then "iter" else "pairs"
 	local array: boolean? = options and options.array or nil
 	local countRange = if options and options.count then parseRange(options.count) else nil
 
@@ -1611,8 +1591,7 @@ function GreenTea.table<T>(contents: T, options: {
 	local indexerValue: Type?
 	local indexerValues: { Type } = {}
 	local rawContents = {}
-	for key, value in pairs(contents :: any) do
-
+	for key, value in contents :: any do
 		if typeof(key) == "table" and GreenTea.isGtType(key) then
 			if indexerKey then
 				error("Only one indexer can be specified")
@@ -1650,8 +1629,6 @@ function GreenTea.table<T>(contents: T, options: {
 		error("If array is true, the table must have an indexer with number keys")
 	end
 
-	local rawMetatable = getmetatable(contents :: any)
-
 	local self: TypeRaw
 	self = {
 		kind = "table",
@@ -1661,9 +1638,7 @@ function GreenTea.table<T>(contents: T, options: {
 				key = indexerKey,
 				value = indexerValue,
 			} or nil,
-			metatable = rawMetatable,
 
-			respectIter = (iterMode == "iter" or nil) :: boolean?,
 			array = array :: boolean?,
 			count = countRange,
 
@@ -1674,20 +1649,28 @@ function GreenTea.table<T>(contents: T, options: {
 				return Cause.err(self, input, "expected table")
 			end
 
-			if rawMetatable then
-				if getmetatable(input) ~= rawMetatable then
-					return Cause.err(self, input, "input metatable does not match expected metatable")
-				end
-			end
-
 			local checked = {}
 
 			local maxN = 0
 			local count = 0
 
 			local cause
-			for key, value in iter(iterMode, input) do
+
+			for key, expectedType in rawContents do
+				local value = input[key]
+
+				cause = expectedType._matches(value)
+				if not cause.ok then
+					return Cause.extendErr(cause, self, input)
+				end
+
 				checked[key] = true
+			end
+
+			for key, value in input do
+				if checked[key] then
+					continue
+				end
 
 				local expectedType = rawContents[key]
 				if expectedType then
@@ -1726,23 +1709,14 @@ function GreenTea.table<T>(contents: T, options: {
 					end
 				end
 			end
-			
+
 			if countRange and not checkRange(count, countRange) then
 				return Cause.err(self, input, `expected number of items to be in range {displayRange(countRange)}, but we saw only {count} items`)
 			end
 
-			for key, value in rawContents do
-				if checked[key] == nil then
-					cause = value._matches(nil)
-					if not cause.ok then
-						return Cause.extendErr(cause, self, input)
-					end
-				end
-			end
-
 			if array and count ~= maxN then
 				assert(indexerValue, "analysis hint")
-				
+
 				cause = indexerValue._matches(nil)
 				if not cause.ok then
 					return Cause.extendErr(cause, self, input, `expected contiguous array, but we saw only {count} items when the max index was {maxN}`)
@@ -1764,9 +1738,6 @@ function GreenTea.table<T>(contents: T, options: {
 			if countRange then
 				table.insert(items, `@count {displayRange(countRange)}`)
 			end
-			if rawMetatable then
-				table.insert(items, `@metatable {tostring(rawMetatable)}`)
-			end
 			if indexerKey then
 				assert(indexerValue, "analysis hint")
 				if indexerKey.kind == "number" then
@@ -1781,7 +1752,7 @@ function GreenTea.table<T>(contents: T, options: {
 					table.insert(items, indexerStr)
 				end
 			end
-			for key: any, value in pairs(rawContents) do
+			for key: any, value in rawContents do
 				local keyStr = tostring(key)
 				local valueStr = value._format(highlight, maxLineLength - 3, recurse)
 				local itemStr = `{keyStr}: {valueStr}`
@@ -1794,7 +1765,7 @@ function GreenTea.table<T>(contents: T, options: {
 			if #items == 0 then
 				return highlightWrap("{}", highlight[self])
 			end
-			
+
 			local leftCurly, rightCurly = "{", "}"
 
 			local result = `{leftCurly} {table.concat(items, ", ")} {rightCurly}`

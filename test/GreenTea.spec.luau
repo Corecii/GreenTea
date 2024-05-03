@@ -658,7 +658,7 @@ describe("gt.table", function()
 				:matches({ [1] = 5, a = 5, b = 5 })
 		).toBe(true)
 	end)
-	it("should respect __iter only when respectIter is set", function()
+	it("should respect __iter", function()
 		local iterT = { a = 1, b = 2, c = 3 }
 		local t = setmetatable({}, {
 			__iter = function()
@@ -666,20 +666,18 @@ describe("gt.table", function()
 			end,
 		})
 
-		expect(gt.table({ a = gt.number(), b = gt.number(), c = gt.number() }, { respectIter = true }):matches(t)).toBe(
+		expect(gt.table({ a = gt.number(), b = gt.number(), c = gt.number() }):matches(t)).toBe(
 			true
 		)
-		expect(gt.table({ [gt.string()] = gt.number() }, { respectIter = true }):matches(t)).toBe(true)
-		expect(gt.table({ [gt.string()] = gt.string() }, { respectIter = true }):matches(t)).toBe(false)
-		
-		expect(gt.table({ a = gt.number(), b = gt.number(), c = gt.number() }, { respectIter = false }):matches(t)).toBe(false)
+		expect(gt.table({ [gt.string()] = gt.number() }):matches(t)).toBe(true)
+		expect(gt.table({ [gt.string()] = gt.string() }):matches(t)).toBe(false)
 	end)
-	it("should match metatable", function()
+	it("should not care about metatable", function()
 		local meta = {}
 		local withMeta = setmetatable({}, meta)
 		expect(gt.table(withMeta):matches(setmetatable({}, meta))).toBe(true)
-		expect(gt.table(withMeta):matches(setmetatable({}, {}))).toBe(false)
-		expect(gt.table(withMeta):matches({})).toBe(false)
+		expect(gt.table(withMeta):matches(setmetatable({}, {}))).toBe(true)
+		expect(gt.table(withMeta):matches({})).toBe(true)
 	end)
 
 	it("should format correctly", function()
@@ -695,7 +693,7 @@ describe("gt.table", function()
 
 		local meta = {}
 		local withMeta = setmetatable({}, meta)
-		expect(gt.table(withMeta):format()).toBe(`\{ @metatable {tostring(meta)} }`)
+		expect(gt.table(withMeta):format()).toBe("{}")
 	end)
 end)
 
