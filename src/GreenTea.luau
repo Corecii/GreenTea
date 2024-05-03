@@ -531,11 +531,17 @@ local function displayInputType(...: any?)
 			inputStr = tostring(...)
 		end
 
-		local gtType = GreenTea.typeof(...) :: any
-		typeStr = gtType:format():gsub("\n%s*", " ")
+		-- disabled for now, as it can take a long time to build a GreenTea type
+		-- for large inputs.
+
+		-- local gtType = GreenTea.typeof(...) :: any
+		-- typeStr = gtType:format():gsub("\n%s*", " ")
+
+		typeStr = typeof(...)
 	else
 		local inputs = {}
 		local inputStrBuilder = {}
+		local typeStrBuilder = {}
 		for i = 1, select("#", ...) do
 			local input = select(i, ...)
 
@@ -548,9 +554,16 @@ local function displayInputType(...: any?)
 				inputStr = tostring(input)
 			end
 			table.insert(inputStrBuilder, inputStr)
+
+			table.insert(typeStrBuilder, typeof(input))
 		end
 
-		typeStr = GreenTea.tuple(unpack(inputs))
+		-- disabled for now, as it can take a long time to build a GreenTea type
+		-- for large inputs.
+
+		-- typeStr = GreenTea.tuple(unpack(inputs))
+
+		typeStr = `({table.concat(typeStrBuilder, ", ")})`
 
 		inputStr = `({table.concat(inputStrBuilder, ", ")})`
 	end
