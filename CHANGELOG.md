@@ -4,6 +4,10 @@
 
 Nothing yet!
 
+## 0.2.1
+
+- Add missing `t` members
+
 ## 0.2.0
 
 - Catch edge case where a GreenTea constructor is passed into a GreenTea constructor
