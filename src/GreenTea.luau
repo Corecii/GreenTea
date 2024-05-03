@@ -1,5 +1,7 @@
 local SOFT_MAX_LINE_LENGTH = 80
 
+local greenteaConstructorsSet = {}
+
 local function highlightWrap(str: string, highlight: string?)
 	if highlight then
 		return `$${highlight}$:{str}:${highlight}$$`
@@ -153,6 +155,8 @@ end
 
 --- @class GreenTea
 local GreenTea = {}
+
+GreenTea.__greenteaConstructorsSet = greenteaConstructorsSet
 
 export type Cause = {
 	ok: boolean,
@@ -2057,6 +2061,10 @@ GreenTea.opt = GreenTea.optional
 function GreenTea.typeof<T>(value: T, recursionCheck: { [any]: any }?): T
 	if GreenTea.isGtType(value) then
 		return value
+	end
+	if greenteaConstructorsSet[value] then
+		local name = greenteaConstructorsSet[value]
+		error(`Attempt to use a GreenTea constructor without calling it: you used {name}; did you mean to use {name}() instead?`)
 	end
 
 	local recursionCheck = recursionCheck or {} :: typeof(assert(recursionCheck))

@@ -754,3 +754,26 @@ describe("gt.intersection", function()
 		end).toThrow()
 	end)
 end)
+
+describe("failure to call detection", function()
+	JestGlobals.fit("should throw if non-called function is passed in to typeof", function()
+		for key, value in gt do
+			expect(function()
+				gt.typeof(value)
+				print("failed to throw for:", typeof(key), key, value)
+			end).toThrow()
+		end
+		for key, value in pairs(gt.isA) do
+			expect(function()
+				gt.typeof(value)
+				print("failed to throw for:", typeof(key), key, value)
+			end).toThrow()
+		end
+		for key, value in pairs(gt.t) do
+			expect(function()
+				gt.typeof(value)
+				print("failed to throw for:", typeof(key), key, value)
+			end).toThrow()
+		end
+	end)
+end)

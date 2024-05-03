@@ -96,4 +96,22 @@ export.asGtType = GreenTea.asGtType
 
 export.build = GreenTea.build
 
+table.freeze(export)
+table.freeze(export.isA)
+table.freeze(export.t)
+table.freeze(GreenTea.__Cause)
+table.freeze(GreenTea.__Type)
+
+for key, value in export do
+	GreenTea.__greenteaConstructorsSet[value] = `GreenTea.{key}`
+end
+
+for key: string, value: any in pairs(export.isA :: any) do
+	GreenTea.__greenteaConstructorsSet[value] = `GreenTea.isA.{key}`
+end
+
+for key: string, value: any in pairs(export.t) do
+	GreenTea.__greenteaConstructorsSet[value] = `GreenTea.t.{key}`
+end
+
 return export
