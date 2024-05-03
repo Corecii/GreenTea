@@ -4,6 +4,11 @@
 
 Nothing yet!
 
+## 0.4.0
+
+- Change behavior around tables to respect `__iter`, `__index`
+- Change behavior around tables to not check if ``getmetatable(input) == getmetable(typedef)`
+
 ## 0.3.1
 
 - Only show simplified input types in error messages
