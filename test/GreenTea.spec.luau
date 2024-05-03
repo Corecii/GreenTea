@@ -148,10 +148,10 @@ local function basicTest(options: {
 		end)
 
 		if not options.skipBasicTypeCheck then
-			it(`should have a kind of 'basic' and a .basic.typeName of '{options.kind}'`, function()
+			it(`should have a kind of 'basic' and a .basic.typeof of '{options.kind}'`, function()
 				local basic = options.fn()
 				expect(basic.kind).toBe("basic")
-				expect(basic.basic.typeName).toBe(options.kind)
+				expect(basic.basic.typeof).toBe(options.kind)
 			end)
 		end
 	end)

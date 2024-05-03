@@ -279,7 +279,8 @@ type TypeRaw = {
 	_needsParens: boolean?,
 
 	basic: {
-		typeName: string,
+		typeof: string?,
+		type: string?,
 	}?,
 
 	any: {
@@ -384,7 +385,7 @@ Type.__index = Type
 --- @prop type string
 
 --- @within Type
---- @prop basic { typeName: string }?
+--- @prop basic { typeof: string?, type: string? }?
 
 --- @within Type
 --- @prop any { allowNil: boolean? }?
@@ -671,7 +672,8 @@ local function newBasicType(typeName: string, useType: boolean?)
 		self = {
 			kind = "basic",
 			basic = {
-				typeName = typeName,
+				typeof = if useType then nil else typeName,
+				type = if useType then typeName else nil,
 			},
 			_matches = function(input: any, ...: any)
 				local inputType = useType and type(input) or typeof(input)
@@ -1193,7 +1195,7 @@ function GreenTea.string(limits: {
 	return setmetatable(self :: any, Type) :: any
 end
 
---- Creates a new GreenTea Type that matches any `type(value)` type.
+--- Creates a new GreenTea Type that matches any `typeof(value)` type.
 function GreenTea.isTypeof<T>(typeName: string, value: T?): T
 	return newBasicType(typeName)()
 end
@@ -1843,7 +1845,7 @@ local union: UnionType = function<T>(...: T): ...T
 		end
 		local value: Type = GreenTea.typeof(types[index])
 		types[index] = value
-		if value.basic and value.basic.typeName == "nil" then
+		if value.basic and (value.basic.type == "nil" or value.basic.typeof == "nil") then
 			table.insert(nilTypes, value)
 		else
 			table.insert(nonnilTypes, value)
