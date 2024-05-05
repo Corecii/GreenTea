@@ -96,6 +96,8 @@ export.asGtType = GreenTea.asGtType
 
 export.build = GreenTea.build
 
+export.meta = GreenTea.meta
+
 table.freeze(export)
 table.freeze(export.isA)
 table.freeze(export.t)
