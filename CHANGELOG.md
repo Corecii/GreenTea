@@ -4,6 +4,10 @@
 
 Nothing yet!
 
+## 0.4.3
+
+- Add `meta` to exports
+
 ## 0.4.2
 
 - Make metadata type more permissive
