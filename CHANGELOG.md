@@ -4,6 +4,10 @@
 
 Nothing yet!
 
+## 0.4.1
+
+- Add user-specified metadata
+
 ## 0.4.0
 
 - Change behavior around tables to respect `__iter`, `__index`
