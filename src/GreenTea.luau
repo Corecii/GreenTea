@@ -274,9 +274,7 @@ type TypeRaw = {
 	kind: string,
 
 	meta: {
-		[string]: {
-			[string]: any,
-		}
+		[string]: any,
 	}?,
 
 	_matches: (...any) -> Cause,
@@ -389,7 +387,7 @@ Type.__index = Type
 --- @prop kind string
 
 --- @within Type
---- @prop meta { [string]: { [string]: any } }?
+--- @prop meta { [string]: any }?
 --- Contains user-specified metadata about the type.
 
 --- @within Type
@@ -2140,15 +2138,8 @@ end
 --- Adds user-specified metadata to a type.\  
 --- Each key/value pair is added to the type's `meta` table.
 --- This is a shallow merge: any matching key/value pair will be overwritten,
---- and all other key/value pairs will be kept as-is.\  
---- The metadata is structured like so in order to incentivize keeping
---- each of your metadata in its own table instead of cluttering the metadata's
---- top-level. For example, if you had component-related metadata, we'd like to see\  
---- `meta: { component: { tags: { string } } }`\  
---- rather than\  
---- `meta: { tags: { string } }`\  
---- because it helps prevent metadata name conflicts.
-function GreenTea.meta<T>(type: T, meta: { [string]: { [string]: any } })
+--- and all other key/value pairs will be kept as-is.
+function GreenTea.meta<T>(type: T, meta: { [string]: any })
 	local type: Type = GreenTea.typeof(type) :: any
 
 	type.meta = type.meta or {}
