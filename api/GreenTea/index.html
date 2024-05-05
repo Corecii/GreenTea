@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v2.3.1">
 <title data-rh="true">GreenTea | GreenTea</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://corecii.github.io/GreenTea/api/GreenTea"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" property="og:title" content="GreenTea | GreenTea"><link data-rh="true" rel="icon" href="/GreenTea/favicon.ico"><link data-rh="true" rel="canonical" href="https://corecii.github.io/GreenTea/api/GreenTea"><link data-rh="true" rel="alternate" href="https://corecii.github.io/GreenTea/api/GreenTea" hreflang="en"><link data-rh="true" rel="alternate" href="https://corecii.github.io/GreenTea/api/GreenTea" hreflang="x-default"><link rel="stylesheet" href="/GreenTea/assets/css/styles.19a5646f.css">
-<link rel="preload" href="/GreenTea/assets/js/runtime~main.109c9e84.js" as="script">
-<link rel="preload" href="/GreenTea/assets/js/main.7743a7c0.js" as="script">
+<link rel="preload" href="/GreenTea/assets/js/runtime~main.64b2da8d.js" as="script">
+<link rel="preload" href="/GreenTea/assets/js/main.586aa33d.js" as="script">
 </head>
 <body class="navigation-with-keyboard">
 <script>!function(){function e(e){document.documentElement.setAttribute("data-theme",e)}var t=function(){var e=null;try{e=localStorage.getItem("theme")}catch(e){}return e}();null!==t?e(t):window.matchMedia("(prefers-color-scheme: dark)").matches?e("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,e("light"))}()</script><div id="__docusaurus">
@@ -155,7 +155,7 @@
   Typecasts a value to be a GreenTea type, with the type stored under the <code>type</code>
   key so you can get the type with <code>typeof(result.type())</code>
 </p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="meta"><code style="text-decoration:none">meta</code><a href="#meta" class="hash-link" aria-label="Direct link to meta" title="Direct link to meta">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/corecii/greentea/blob/main/src/GreenTea.luau#L2142"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>GreenTea<!-- -->.</code><code class="green_DgR4">meta</code><code>(</code><div class="inset_uKQm"><div><code>type<!-- -->: </code><code class="blue_P4bS">T</code><code>,</code></div><div><code>meta<!-- -->: </code><code class="purple_ieR2">{</code><span><code>[</code><code class="blue_P4bS">string</code><code>]</code></span><code>: </code><code class="blue_P4bS">any</code><code class="purple_ieR2">}</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="meta"><code style="text-decoration:none">meta</code><a href="#meta" class="hash-link" aria-label="Direct link to meta" title="Direct link to meta">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/corecii/greentea/blob/main/src/GreenTea.luau#L2142"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>GreenTea<!-- -->.</code><code class="green_DgR4">meta</code><code>(</code><div class="inset_uKQm"><div><code>gtType<!-- -->: </code><code class="blue_P4bS">T</code><code>,</code></div><div><code>meta<!-- -->: </code><code class="purple_ieR2">{</code><span><code>[</code><code class="blue_P4bS">string</code><code>]</code></span><code>: </code><code class="blue_P4bS">any</code><code class="purple_ieR2">}</code></div></div><code>) → </code><code class="blue_P4bS">T</code></div><div>
 <p>
   Adds user-specified metadata to a type.\<br>Each key/value pair is added to the type's <code>meta</code> table.
   This is a shallow merge: any matching key/value pair will be overwritten,
@@ -924,7 +924,7 @@
             &quot;desc&quot;: &quot;Adds user-specified metadata to a type.\\  \nEach key/value pair is added to the type&#x27;s `meta` table.\nThis is a shallow merge: any matching key/value pair will be overwritten,\nand all other key/value pairs will be kept as-is.&quot;,
             &quot;params&quot;: [
                 {
-                    &quot;name&quot;: &quot;type&quot;,
+                    &quot;name&quot;: &quot;gtType&quot;,
                     &quot;desc&quot;: &quot;&quot;,
                     &quot;lua_type&quot;: &quot;T&quot;
                 },
@@ -934,7 +934,12 @@
                     &quot;lua_type&quot;: &quot;{ [string]: any }&quot;
                 }
             ],
-            &quot;returns&quot;: [],
+            &quot;returns&quot;: [
+                {
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;T\n&quot;
+                }
+            ],
             &quot;function_type&quot;: &quot;static&quot;,
             &quot;source&quot;: {
                 &quot;line&quot;: 2142,
@@ -971,7 +976,7 @@
         &quot;path&quot;: &quot;src/GreenTea.luau&quot;
     }
 }</pre></details></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a><ul><li><a href="#RangeInput" class="table-of-contents__link toc-highlight">RangeInput</a></li></ul></li><li><a href="#properties" class="table-of-contents__link toc-highlight">Properties</a><ul><li><a href="#isA" class="table-of-contents__link toc-highlight">isA</a></li></ul></li><li><a href="#functions" class="table-of-contents__link toc-highlight">Functions</a><ul><li><a href="#any" class="table-of-contents__link toc-highlight">.any</a></li><li><a href="#anyfn" class="table-of-contents__link toc-highlight">.anyfn</a></li><li><a href="#args" class="table-of-contents__link toc-highlight">.args</a></li><li><a href="#array" class="table-of-contents__link toc-highlight">.array</a></li><li><a href="#boolean" class="table-of-contents__link toc-highlight">.boolean</a></li><li><a href="#buffer" class="table-of-contents__link toc-highlight">.buffer</a></li><li><a href="#build" class="table-of-contents__link toc-highlight">.build</a></li><li><a href="#coroutine" class="table-of-contents__link toc-highlight">.coroutine</a></li><li><a href="#custom" class="table-of-contents__link toc-highlight">.custom</a></li><li><a href="#dictionary" class="table-of-contents__link toc-highlight">.dictionary</a></li><li><a href="#fn" class="table-of-contents__link toc-highlight">.fn</a></li><li><a href="#Instance" class="table-of-contents__link toc-highlight">.Instance</a></li><li><a href="#intersection" class="table-of-contents__link toc-highlight">.intersection</a></li><li><a href="#isA" class="table-of-contents__link toc-highlight">.isA</a></li><li><a href="#isGreenTeaType" class="table-of-contents__link toc-highlight">.isGreenTeaType</a></li><li><a href="#isType" class="table-of-contents__link toc-highlight">.isType</a></li><li><a href="#isTypeof" class="table-of-contents__link toc-highlight">.isTypeof</a></li><li><a href="#literal" class="table-of-contents__link toc-highlight">.literal</a></li><li><a href="#meta" class="table-of-contents__link toc-highlight">.meta</a></li><li><a href="#never" class="table-of-contents__link toc-highlight">.never</a></li><li><a href="#none" class="table-of-contents__link toc-highlight">.none</a></li><li><a href="#number" class="table-of-contents__link toc-highlight">.number</a></li><li><a href="#optional" class="table-of-contents__link toc-highlight">.optional</a></li><li><a href="#returns" class="table-of-contents__link toc-highlight">.returns</a></li><li><a href="#string" class="table-of-contents__link toc-highlight">.string</a></li><li><a href="#table" class="table-of-contents__link toc-highlight">.table</a></li><li><a href="#tuple" class="table-of-contents__link toc-highlight">.tuple</a></li><li><a href="#tuplePacked" class="table-of-contents__link toc-highlight">.tuplePacked</a></li><li><a href="#typecast" class="table-of-contents__link toc-highlight">.typecast</a></li><li><a href="#typeof" class="table-of-contents__link toc-highlight">.typeof</a></li><li><a href="#types not listed here" class="table-of-contents__link toc-highlight">.types not listed here</a></li><li><a href="#union" class="table-of-contents__link toc-highlight">.union</a></li><li><a href="#unknown" class="table-of-contents__link toc-highlight">.unknown</a></li><li><a href="#vararg" class="table-of-contents__link toc-highlight">.vararg</a></li><li><a href="#withCustom" class="table-of-contents__link toc-highlight">.withCustom</a></li></ul></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2024 Shae A. Built with Moonwave and Docusaurus</div></div></div></footer></div>
-<script src="/GreenTea/assets/js/runtime~main.109c9e84.js"></script>
-<script src="/GreenTea/assets/js/main.7743a7c0.js"></script>
+<script src="/GreenTea/assets/js/runtime~main.64b2da8d.js"></script>
+<script src="/GreenTea/assets/js/main.586aa33d.js"></script>
 </body>
 </html>
