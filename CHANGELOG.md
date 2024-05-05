@@ -4,6 +4,10 @@
 
 Nothing yet!
 
+## 0.4.4
+
+- Fix: meta did not return input
+
 ## 0.4.3
 
 - Add `meta` to exports
