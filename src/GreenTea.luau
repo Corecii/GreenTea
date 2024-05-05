@@ -273,6 +273,12 @@ type TypeMt = {
 type TypeRaw = {
 	kind: string,
 
+	meta: {
+		[string]: {
+			[string]: any,
+		}
+	}?,
+
 	_matches: (...any) -> Cause,
 	_format: (highlight: { [any]: string }, maxLineLength: number, recurse: { [any]: any }) -> string,
 
@@ -381,6 +387,10 @@ Type.__index = Type
 
 --- @within Type
 --- @prop kind string
+
+--- @within Type
+--- @prop meta { [string]: { [string]: any } }?
+--- Contains user-specified metadata about the type.
 
 --- @within Type
 --- @prop basic { typeof: string?, type: string? }?
@@ -2105,6 +2115,8 @@ end
 -- Luau LSP picks up the docs for the `:type()` method.
 local BuiltType = {}
 
+-- We use a different comment style here so that moonwave does not pick up this
+-- comment and complain about that lack of BuiltType class definition.
 --[[
 In type definitions via `typeof(Type.type())`, returns the Luau type this
 GreenTea type represents.\
@@ -2123,6 +2135,28 @@ function GreenTea.build<T...>(...: T...): Type & { __getType: () -> T... } & typ
 		return gtType
 	end
 	return gtType
+end
+
+--- Adds user-specified metadata to a type.\  
+--- Each key/value pair is added to the type's `meta` table.
+--- This is a shallow merge: any matching key/value pair will be overwritten,
+--- and all other key/value pairs will be kept as-is.\  
+--- The metadata is structured like so in order to incentivize keeping
+--- each of your metadata in its own table instead of cluttering the metadata's
+--- top-level. For example, if you had component-related metadata, we'd like to see\  
+--- `meta: { component: { tags: { string } } }`\  
+--- rather than\  
+--- `meta: { tags: { string } }`\  
+--- because it helps prevent metadata name conflicts.
+function GreenTea.meta<T>(type: T, meta: { [string]: { [string]: any } })
+	local type: Type = GreenTea.typeof(type) :: any
+
+	type.meta = type.meta or {}
+	assert(type.meta, "analysis hint")
+
+	for key, value in meta do
+		type.meta[key] = value
+	end
 end
 
 return GreenTea
