@@ -4,6 +4,10 @@
 
 Nothing yet!
 
+## 0.4.2
+
+- Make metadata type more permissive
+
 ## 0.4.1
 
 - Add user-specified metadata
