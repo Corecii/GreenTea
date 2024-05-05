@@ -76,5 +76,7 @@ fs.removeFile("GreenTea.rbxm")
 exec("wally publish")
 exec("wally publish", { cwd = "src-t-standalone" })
 
-exec("moonwave build --publish")
+-- Sorry this is windows only. Lune couldn't find moonwave otherwise. Grab
+-- another OS and fix it for me please!
+exec("cmd /C moonwave build --publish")
 
