@@ -2139,15 +2139,17 @@ end
 --- Each key/value pair is added to the type's `meta` table.
 --- This is a shallow merge: any matching key/value pair will be overwritten,
 --- and all other key/value pairs will be kept as-is.
-function GreenTea.meta<T>(type: T, meta: { [string]: any })
-	local type: Type = GreenTea.typeof(type) :: any
+function GreenTea.meta<T>(gtType: T, meta: { [string]: any }): T
+	local gtType: Type = GreenTea.typeof(gtType) :: any
 
-	type.meta = type.meta or {}
-	assert(type.meta, "analysis hint")
+	gtType.meta = gtType.meta or {}
+	assert(gtType.meta, "analysis hint")
 
 	for key, value in meta do
-		type.meta[key] = value
+		gtType.meta[key] = value
 	end
+
+	return gtType
 end
 
 return GreenTea
