@@ -4,6 +4,11 @@
 
 Nothing yet!
 
+## 0.4.5
+
+- Fix type signature of `__call`
+- Fix typechecking failure in `.meta`
+
 ## 0.4.4
 
 - Fix: meta did not return input

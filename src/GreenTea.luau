@@ -265,7 +265,7 @@ type TypeMt = {
 		formatErr: (self: any, cause: any, values: Packed?) -> string,
 	},
 
-	__call: (self: any, ...any) -> (boolean, Cause),
+	__call: (self: any, ...any) -> (boolean, string?),
 
 	__tostring: (self: any) -> string,
 }
@@ -2149,7 +2149,7 @@ function GreenTea.meta<T>(gtType: T, meta: { [string]: any }): T
 		gtType.meta[key] = value
 	end
 
-	return gtType
+	return gtType :: any
 end
 
 return GreenTea
