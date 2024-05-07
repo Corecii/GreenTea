@@ -20,9 +20,7 @@ Please leave feedback on the issues page. Thank you!
 
 ### with Wally (for Rojo)
 1. [Install Wally](https://wally.run/install)
-2. Add GreenTea to your `wally.toml`
-  - Run `wally add corecii/GreenTea`
-  - _or_ Add `GreenTea = "corecii/GreenTea@0.4.5"` to your `wally.toml`
+2. Add `GreenTea = "corecii/greentea@0.4.5"` to your `wally.toml`
 
 ### Standalone (for non-Rojo)
 - Download from [the Releases page](https://github.com/corecii/greentea/releases)
