@@ -2133,8 +2133,27 @@ end
 
 --- Typecasts a value to be a GreenTea type, with the type stored under the `type`
 --- key so you can get the type with `typeof(result.type())`
-function GreenTea.build<T...>(...: T...): Type & { __getType: () -> T... } & typeof(BuiltType)
-	local gtType: any = GreenTea.typeof((castTuple(...)))
+	local gtType: any
+
+	local isTuple = select("#", ...) > 1
+
+	-- Only treat it as a tuple if there are actually multiple values
+	if isTuple then
+		isTuple = false
+		for index = 2, select("#", ...) do
+			if select(index, ...) ~= nil then
+				isTuple = true
+				break
+			end
+		end
+	end
+
+	if isTuple then
+		gtType = GreenTea.tuple(...)
+	else
+		gtType = GreenTea.typeof((castTuple(...)))
+	end
+	
 	gtType.type = function(self: Type)
 		return gtType
 	end
