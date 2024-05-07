@@ -4,6 +4,12 @@
 
 Nothing yet!
 
+## 0.4.6
+
+- Fix buggy type definition for `GreenTea.fn`
+- Make `GreenTea.build` handle tuples properly
+- Export a type for `GreenTea.build`'s "BuiltType" values
+
 ## 0.4.5
 
 - Fix type signature of `__call`
