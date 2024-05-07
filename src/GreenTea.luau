@@ -2131,8 +2131,11 @@ function BuiltType.type<T...>(self: { __getType: () -> T... }): T...
 	return castTuple(self)
 end
 
+export type BuiltType<T... = ...any> = Type & { __getType: () -> T... } & typeof(BuiltType)
+
 --- Typecasts a value to be a GreenTea type, with the type stored under the `type`
 --- key so you can get the type with `typeof(result.type())`
+function GreenTea.build<T...>(...: T...): BuiltType<T...>
 	local gtType: any
 
 	local isTuple = select("#", ...) > 1
