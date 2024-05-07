@@ -1465,7 +1465,13 @@ end
 --- `type.fn.args` and `type.fn.returns` to run runtime typechecking yourself.
 --- For example, if you were building a RemoteFunction wrapper, you could use
 --- `type.fn.returns` to check that the client returned correct values.
-function GreenTea.fn<Args..., Returns...>(args: (Args...) -> (), returns: () -> Returns...): (Args...) -> Returns...
+function GreenTea.fn<Args..., Returns...>(
+	args: (Args...) -> (),
+	returns: () -> Returns...
+): ((Args...) -> Returns...)
+	-- The extra parens above are *IMPORTANT*. They prevent some weird behavior
+	-- where Luau wants to make this function return `(Args...) -> Returns..., Args...`
+
 	local args: Type = args :: any
 	local returns: Type = returns :: any
 
