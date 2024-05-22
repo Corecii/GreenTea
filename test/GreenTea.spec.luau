@@ -658,11 +658,14 @@ describe("gt.table", function()
 				:matches({ [1] = 5, a = 5, b = 5 })
 		).toBe(true)
 	end)
-	it("should respect __iter", function()
+	it("should respect __index and __iter", function()
 		local iterT = { a = 1, b = 2, c = 3 }
 		local t = setmetatable({}, {
 			__iter = function()
 				return pairs(iterT)
+			end,
+			__index = function(_, key)
+				return iterT[key]
 			end,
 		})
 
@@ -753,8 +756,23 @@ describe("gt.intersection", function()
 	end)
 end)
 
+describe("Type", function()
+	describe("Type:assert", function()
+		local RegExp = require(script.Parent.Parent.DevPackages.RegExp)
+
+		it("should assert", function()
+			expect(function()
+				gt.number():assert(5)
+			end).never.toThrow()
+			expect(function()
+				gt.number():assert("hello")
+			end).toThrow(RegExp("expected number, got string"))
+		end)
+	end)
+end)
+
 describe("failure to call detection", function()
-	JestGlobals.fit("should throw if non-called function is passed in to typeof", function()
+	it("should throw if non-called function is passed in to typeof", function()
 		for key, value in gt do
 			expect(function()
 				gt.typeof(value)

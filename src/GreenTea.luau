@@ -446,7 +446,7 @@ end
 function Type.assert<T...>(self: Type, ...: T...): T...
 	local ok, cause = self:matches(...)
 	if not ok then
-		error(cause.formatErr())
+		error(cause:formatErr())
 	end
 	return ...
 end
