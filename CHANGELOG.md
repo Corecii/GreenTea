@@ -4,6 +4,11 @@
 
 Nothing yet!
 
+## 0.4.7
+
+- Fix Type:assert and add tests for it
+- Fix tests for table type to check __index
+
 ## 0.4.6
 
 - Fix buggy type definition for `GreenTea.fn`
