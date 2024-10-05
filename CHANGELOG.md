@@ -4,6 +4,13 @@
 
 Nothing yet!
 
+## 0.4.8
+
+- Optimizations
+- Internal change: only use `\` in markdown comments for indication newlines. Cleans up moonwave docs some.
+- Internal change: wrap moonwave in a helper script that makes corrections for moonwave.
+- Internal change: format with Stylua.
+
 ## 0.4.7
 
 - Fix Type:assert and add tests for it
