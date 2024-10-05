@@ -25,7 +25,7 @@ end
 local function spaceLengthOf(str: string)
 	local minSpaces
 	for line in string.gmatch(str, "[^\n]+") do
-		local spaces = line:match("^ *") :: string
+		local spaces = string.match(line, "^ *") :: string
 		if not minSpaces or #spaces < #minSpaces then
 			minSpaces = spaces
 		end
@@ -34,11 +34,11 @@ local function spaceLengthOf(str: string)
 end
 
 local function tabFirst(str: string)
-	return "    " .. str:gsub("\n", "\n    ")
+	return "    " .. string.gsub(str, "\n", "\n    ")
 end
 
 local function tabSecond(str: string)
-	return str:gsub("\n", "\n    ")
+	return string.gsub(str, "\n", "\n    ")
 end
 
 type Range = { min: number?, minExclusive: boolean, max: number?, maxExclusive: boolean }
@@ -76,7 +76,7 @@ local function parseRange(rangeIn: RangeInput): Range
 	local numbers = ".-"
 
 	local prefix, minStr, maxStr, suffix =
-		rangeIn:match(`^%s*({leftBracket})%s*({numbers}),%s*({numbers})%s*({rightBracket})%s*$`)
+		string.match(rangeIn, `^%s*({leftBracket})%s*({numbers}),%s*({numbers})%s*({rightBracket})%s*$`)
 
 	if not prefix then
 		error(
@@ -591,7 +591,7 @@ function Type.formatErr(self: Type, cause: Cause): string
 
 	local headerErr = cause.errs[1]
 	if headerErr.message then
-		header = headerErr.message:gsub("$input", displayInputType(headerErr.input))
+		header = string.gsub(headerErr.message, "$input", displayInputType(headerErr.input))
 	else
 		header = `expected {headerErr.type:format()}, got {displayInputType(headerErr.input)}`
 	end
@@ -609,7 +609,7 @@ function Type.formatErr(self: Type, cause: Cause): string
 	formattedStr = `\n{formattedStr}\n`
 
 	local order = {}
-	for numStr in formattedStr:gmatch("%$%$error(%d+)%$:") do
+	for numStr in string.gmatch(formattedStr, "%$%$error(%d+)%$:") do
 		local num = tonumber(numStr) :: number
 		table.insert(order, num)
 	end
@@ -617,19 +617,20 @@ function Type.formatErr(self: Type, cause: Cause): string
 	for orderIndex = #order, 1, -1 do
 		local index = order[orderIndex]
 		local err = cause.errs[index]
-		formattedStr = formattedStr:gsub(
+		formattedStr = string.gsub(
+			formattedStr,
 			`([^\n]*)$$error{index}$:(.*):$error{index}$$([^\n]*)\n(.*)$`,
 			function(pre: string, mid: string, post: string, everythingElse: string)
 				local errPointer
 				if mid:find("\n", 1, true) == nil then
-					local preNoAnnotations = pre:gsub("%$%$error%d+%$:", ""):gsub(":%$error%d+%$%$", "")
-					errPointer = (" "):rep(#preNoAnnotations) .. ("^"):rep(#mid)
+					local preNoAnnotations = string.gsub(string.gsub(pre, "%$%$error%d+%$:", ""), ":%$error%d+%$%$", "")
+					errPointer = string.rep(" ", #preNoAnnotations) .. string.rep("^", #mid)
 				else
 					local realStr = `{pre}{mid}{post}`
 					local lineLength = lineLengthOf(realStr)
 					local spaceLength = spaceLengthOf(realStr)
 
-					errPointer = (" "):rep(spaceLength) .. ("^"):rep(lineLength - spaceLength)
+					errPointer = string.rep(" ", spaceLength) .. string.rep("^", lineLength - spaceLength)
 				end
 
 				if err.message then
@@ -639,11 +640,11 @@ function Type.formatErr(self: Type, cause: Cause): string
 				local preLines = {}
 
 				while true do
-					local nextLine, newEverythingElse = everythingElse:match("^([^\n]*)\n(.*)$")
+					local nextLine, newEverythingElse = string.match(everythingElse, "^([^\n]*)\n(.*)$")
 					if not (nextLine and newEverythingElse) then
 						break
 					end
-					if nextLine:match("^%s*^") then
+					if string.match(nextLine, "^%s*^") then
 						table.insert(preLines, nextLine)
 						everythingElse = newEverythingElse
 					else
@@ -662,12 +663,13 @@ function Type.formatErr(self: Type, cause: Cause): string
 
 	for index, err in cause.errs do
 		if err.message then
-			local errMessage = err.message:gsub("$input", displayInputType(err.input))
-			formattedStr = formattedStr:gsub(`%$%$error{index}%$%$`, errMessage)
+			local errMessage = string.gsub(err.message, "$input", displayInputType(err.input))
+			formattedStr = string.gsub(formattedStr, `%$%$error{index}%$%$`, errMessage)
 		end
 	end
 
-	formattedStr = formattedStr:gsub(
+	formattedStr = string.gsub(
+		formattedStr,
 		"\n(%s*)(^+) ([^\n]+)",
 		function(spaces, carets, errMessage): string?
 			if #spaces + #carets + #errMessage + 1 <= SOFT_MAX_LINE_LENGTH then
@@ -953,7 +955,7 @@ function GreenTea.withCustom<T>(type: T, typechecker: (any) -> (boolean, any?), 
 		if fnName ~= "" then
 			name = fnName
 		else
-			local scriptNamePre, scriptNamePost = source:match("([^%.]+)%.(.-)$")
+			local scriptNamePre, scriptNamePost = string.match(source, "([^%.]+)%.(.-)$")
 			if not (scriptNamePre and scriptNamePost) then
 				name = `{source}:{line}`
 			else
@@ -1213,7 +1215,8 @@ function GreenTea.string(limits: {
 				table.insert(limitsStr, `bytes {displayRange(byteLengthRange)}`)
 			end
 			if limits.pattern then
-				local pattern = limits.pattern:gsub("[\r\n\t]", { ["\r"] = "\\r", ["\n"] = "\\n", ["\t"] = "\\t" })
+				local pattern =
+					string.gsub(limits.pattern, "[\r\n\t]", { ["\r"] = "\\r", ["\n"] = "\\n", ["\t"] = "\\t" })
 				table.insert(limitsStr, `pattern "{pattern}"`)
 			end
 
