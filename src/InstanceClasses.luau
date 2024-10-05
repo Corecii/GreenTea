@@ -254,8 +254,7 @@ InstanceClasses.DraftsService = class("DraftsService") :: () -> DraftsService
 InstanceClasses.Dragger = class("Dragger") :: () -> Dragger
 InstanceClasses.DraggerService = class("DraggerService") :: () -> DraggerService
 InstanceClasses.EditableImage = class("EditableImage") :: () -> EditableImage
-InstanceClasses.EngineAPICloudProcessingService =
-	class("EngineAPICloudProcessingService") :: () -> EngineAPICloudProcessingService
+InstanceClasses.EngineAPICloudProcessingService = class("EngineAPICloudProcessingService") :: () -> never -- removed class
 InstanceClasses.EulerRotationCurve = class("EulerRotationCurve") :: () -> EulerRotationCurve
 InstanceClasses.EventIngestService = class("EventIngestService") :: () -> EventIngestService
 InstanceClasses.ExperienceAuthService = class("ExperienceAuthService") :: () -> ExperienceAuthService
