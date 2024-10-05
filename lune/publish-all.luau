@@ -65,10 +65,15 @@ end
 exec("rojo build -o GreenTea.rbxm default.project.json")
 
 exec({
-	"gh", "release", "create", `v{wally.package.version}`,
-	"-t", `v{wally.package.version}`,
-	"-n", changelogEntry,
-	"GreenTea.rbxm"
+	"gh",
+	"release",
+	"create",
+	`v{wally.package.version}`,
+	"-t",
+	`v{wally.package.version}`,
+	"-n",
+	changelogEntry,
+	"GreenTea.rbxm",
 })
 
 fs.removeFile("GreenTea.rbxm")
@@ -76,7 +81,4 @@ fs.removeFile("GreenTea.rbxm")
 exec("wally publish")
 exec("wally publish", { cwd = "src-t-standalone" })
 
--- Sorry this is windows only. Lune couldn't find moonwave otherwise. Grab
--- another OS and fix it for me please!
-exec("cmd /C moonwave build --publish")
-
+exec("lune run moonwave -- build --publish", { shell = true })
