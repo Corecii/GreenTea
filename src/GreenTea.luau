@@ -34,7 +34,7 @@ end
 local function spaceLengthOf(str: string)
 	local minSpaces
 	for _, line in string.split(str, "\n") do
-		local start, finish = string.find(line, "^ +")
+		local start, finish = string.find(line, "^ *")
 		if start and finish then
 			local length = finish - start + 1
 			if not minSpaces or length < minSpaces then
