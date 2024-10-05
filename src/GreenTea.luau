@@ -13,10 +13,19 @@ end
 -- Returns the maximum number of characters in any line
 local function lineLengthOf(str: string)
 	local maxLength = 0
-	for line in string.gmatch(str, "[^\n]+") do
-		if #line > maxLength then
-			maxLength = #line
+	local lastIndex = 1
+	while true do
+		local start, finish = string.find(str, "[^\n]+", lastIndex)
+		if not (start and finish) then
+			break
 		end
+
+		local length = finish - start + 1
+		if length > maxLength then
+			maxLength = length
+		end
+
+		lastIndex = finish + 1
 	end
 	return maxLength
 end
@@ -24,13 +33,16 @@ end
 -- Returns the minimum number of spaces prefixing every line
 local function spaceLengthOf(str: string)
 	local minSpaces
-	for line in string.gmatch(str, "[^\n]+") do
-		local spaces = string.match(line, "^ *") :: string
-		if not minSpaces or #spaces < #minSpaces then
-			minSpaces = spaces
+	for _, line in string.split(str, "\n") do
+		local start, finish = string.find(line, "^ +")
+		if start and finish then
+			local length = finish - start + 1
+			if not minSpaces or length < minSpaces then
+				minSpaces = length
+			end
 		end
 	end
-	return #minSpaces
+	return minSpaces or 0
 end
 
 local function tabFirst(str: string)
@@ -495,7 +507,7 @@ local function truncate(count: number, str: string)
 		local grapheme = str:sub(graphemeStart, graphemeFinish)
 		table.insert(rebuiltString, grapheme)
 		if #rebuiltString >= count then
-			return `[{table.concat(rebuiltString, "")}...]`
+			return `[{table.concat(rebuiltString)}...]`
 		end
 	end
 
@@ -545,9 +557,10 @@ local function displayInputType(...: any?)
 
 		typeStr = typeof(...)
 	else
-		local inputs = {}
-		local inputStrBuilder = {}
-		local typeStrBuilder = {}
+		local length = select("#", ...)
+		local inputs = table.create(length)
+		local inputStrBuilder = table.create(length)
+		local typeStrBuilder = table.create(length)
 		for i = 1, select("#", ...) do
 			local input = select(i, ...)
 
@@ -622,7 +635,7 @@ function Type.formatErr(self: Type, cause: Cause): string
 			`([^\n]*)$$error{index}$:(.*):$error{index}$$([^\n]*)\n(.*)$`,
 			function(pre: string, mid: string, post: string, everythingElse: string)
 				local errPointer
-				if mid:find("\n", 1, true) == nil then
+				if string.find(mid, "\n", 1, true) == nil then
 					local preNoAnnotations = string.gsub(string.gsub(pre, "%$%$error%d+%$:", ""), ":%$error%d+%$%$", "")
 					errPointer = string.rep(" ", #preNoAnnotations) .. string.rep("^", #mid)
 				else
@@ -1070,7 +1083,7 @@ function GreenTea.number(limits: {
 				if range and not checkRange(input, range) then
 					return Cause.err(self, input, `input out of range (input: {input})`)
 				end
-				if limits.integer and math.floor(input) ~= input then
+				if limits.integer and input % 1 ~= 0 then
 					return Cause.err(self, input, `input is not an integer (input: {input})`)
 				end
 			end
@@ -1120,6 +1133,8 @@ local function countGraphemes(str: string): number?
 		return count
 	end
 end
+
+local PATTERN_REPLACEMENTS = { ["\r"] = "\\r", ["\n"] = "\\n", ["\t"] = "\\t" }
 
 --- Creates a new GreenTea Type that matches string values.\
 --- Optionally, you can specify a pattern, a length range, and whether the string must be utf8.\
@@ -1215,8 +1230,7 @@ function GreenTea.string(limits: {
 				table.insert(limitsStr, `bytes {displayRange(byteLengthRange)}`)
 			end
 			if limits.pattern then
-				local pattern =
-					string.gsub(limits.pattern, "[\r\n\t]", { ["\r"] = "\\r", ["\n"] = "\\n", ["\t"] = "\\t" })
+				local pattern = string.gsub(limits.pattern, "[\r\n\t]", PATTERN_REPLACEMENTS)
 				table.insert(limitsStr, `pattern "{pattern}"`)
 			end
 
@@ -1444,7 +1458,7 @@ function GreenTea.tuple<T...>(...: T...): T...
 				if expectedType._needsParens then
 					valueStr = `({expectedType._format(highlight, maxLineLength - 4, recurse)})`
 				else
-					valueStr = `{expectedType._format(highlight, maxLineLength - 2, recurse)}`
+					valueStr = expectedType._format(highlight, maxLineLength - 2, recurse)
 				end
 				table.insert(formatted, valueStr)
 			end
@@ -1453,7 +1467,7 @@ function GreenTea.tuple<T...>(...: T...): T...
 				table.insert(formatted, vararg._format(highlight, maxLineLength - 3, recurse))
 			end
 
-			local result = `{table.concat(formatted, ", ")}`
+			local result = table.concat(formatted, ", ")
 			if lineLengthOf(result) > maxLineLength or string.find(result, "\n", 1, true) then
 				return highlightWrap(`(\n{tabFirst(table.concat(formatted, ",\n"))}\n)`, highlight[self])
 			else
@@ -1538,7 +1552,7 @@ function GreenTea.fn<Args..., Returns...>(args: (Args...) -> (), returns: () -> 
 				argsStr = "() ->"
 			else
 				argsStr = `({table.concat(argsFormatted, ", ")}) ->`
-				if lineLengthOf(argsStr) > SOFT_MAX_LINE_LENGTH or argsStr:find("\n", 1, true) then
+				if lineLengthOf(argsStr) > SOFT_MAX_LINE_LENGTH or string.find(argsStr, "\n", 1, true) then
 					argsStr = `(\n{tabFirst(table.concat(argsFormatted, ",\n"))}\n) ->`
 				end
 			end
@@ -1551,7 +1565,7 @@ function GreenTea.fn<Args..., Returns...>(args: (Args...) -> (), returns: () -> 
 				returnsStr = returnsFormatted[1]
 			else
 				returnsStr = `({table.concat(returnsFormatted, ", ")})`
-				if lineLengthOf(returnsStr) > SOFT_MAX_LINE_LENGTH or returnsStr:find("\n", 1, true) then
+				if lineLengthOf(returnsStr) > SOFT_MAX_LINE_LENGTH or string.find(returnsStr, "\n", 1, true) then
 					returnsStr = tabSecond(`({table.concat(returnsFormatted, ",\n")})`)
 				end
 			end
@@ -1967,7 +1981,7 @@ local union: UnionType = function<T>(...: T): ...T
 				if expectedType._needsParens then
 					valueStr = `({expectedType._format(highlight, maxLineLength - 4, recurse)})`
 				else
-					valueStr = `{expectedType._format(highlight, maxLineLength - 2, recurse)}`
+					valueStr = expectedType._format(highlight, maxLineLength - 2, recurse)
 				end
 				table.insert(formatted, valueStr)
 			end
@@ -2073,7 +2087,7 @@ local intersection: IntersectionType = function<T>(...: T): ...T
 				if expectedType._needsParens then
 					valueStr = `({expectedType._format(highlight, maxLineLength - 4, recurse)})`
 				else
-					valueStr = `{expectedType._format(highlight, maxLineLength - 2, recurse)}`
+					valueStr = expectedType._format(highlight, maxLineLength - 2, recurse)
 				end
 				table.insert(formatted, valueStr)
 			end
