@@ -75,7 +75,8 @@ local function parseRange(rangeIn: RangeInput): Range
 	local rightBracket = "[%]%)]"
 	local numbers = ".-"
 
-	local prefix, minStr, maxStr, suffix = rangeIn:match(`^%s*({leftBracket})%s*({numbers}),%s*({numbers})%s*({rightBracket})%s*$`)
+	local prefix, minStr, maxStr, suffix =
+		rangeIn:match(`^%s*({leftBracket})%s*({numbers}),%s*({numbers})%s*({rightBracket})%s*$`)
 
 	if not prefix then
 		error(
@@ -364,8 +365,8 @@ local Type = {}
 Type.__index = Type
 
 --- @class Type
---- Represents a type we can check against or inspect.  
---- Use the methods to check against the type.  
+--- Represents a type we can check against or inspect.\
+--- Use the methods to check against the type.\
 --- Use the properties to inspect the type.
 
 --- @type Range { min: number?, minExclusive: boolean, max: number?, maxExclusive: boolean }
@@ -373,10 +374,9 @@ Type.__index = Type
 
 --- @type RangeInput string | number | { min: number?, minExclusive: boolean?, max: number?, maxExclusive: boolean? }
 --- @within GreenTea
---- A value that can be parsed as a range.  
+--- A value that can be parsed as a range.\
 --- As a string, can be "[min, max]", "(min, max)", "(min, max]", "(, max]" etc. or a number max inclusive.
 --- As a number, it's interpreted as a number max inclusive.
-
 
 --- @type Cause { ok: boolean, encompassingType: Type?, errs: { { type: any, input: any?, message: string? } }, formatErr: (self: Cause) -> string }
 --- @within Type
@@ -659,7 +659,7 @@ function Type.formatErr(self: Type, cause: Cause): string
 			end :: any
 		)
 	end
-	
+
 	for index, err in cause.errs do
 		if err.message then
 			local errMessage = err.message:gsub("$input", displayInputType(err.input))
@@ -734,7 +734,7 @@ function GreenTea.any(options: { allowNil: boolean? }?): any
 
 			return Cause.ok()
 		end,
-		_format = function(highlight: { [any]: string }, maxLineLength: number, recurse: { [any]: any })			
+		_format = function(highlight: { [any]: string }, maxLineLength: number, recurse: { [any]: any })
 			return highlightWrap("any", highlight[self])
 		end,
 	}
@@ -816,7 +816,6 @@ function GreenTea.coroutine(options: { status: CoroutineStatus | { CoroutineStat
 			end
 		end
 
-		
 		local expectedStatusStrBuilder = {}
 		for k, _ in expectedStatusSet do
 			if not table.find(coroutineStatuses, k) then
@@ -848,7 +847,11 @@ function GreenTea.coroutine(options: { status: CoroutineStatus | { CoroutineStat
 				local coroutineStatus = coroutine.status(input)
 
 				if not expectedStatusSet[coroutineStatus] then
-					return Cause.err(self, input, `expected thread with status {expectedStatusStr}, got thread with status {coroutineStatus}`)
+					return Cause.err(
+						self,
+						input,
+						`expected thread with status {expectedStatusStr}, got thread with status {coroutineStatus}`
+					)
 				end
 			end
 
@@ -1135,7 +1138,9 @@ function GreenTea.string(limits: {
 	local graphemeLengthRange = limits and limits.graphemes and parseRange(limits.graphemes)
 
 	if graphemeLengthRange and not byteLengthRange then
-		error("graphemes limit requires bytes limit. Graphemes have no upper limit on size, so if only graphemes limit is set, the byte limit is practically infinite. If you really want infinite byte length, set bytes to `[0, inf]`")
+		error(
+			"graphemes limit requires bytes limit. Graphemes have no upper limit on size, so if only graphemes limit is set, the byte limit is practically infinite. If you really want infinite byte length, set bytes to `[0, inf]`"
+		)
 	end
 
 	local self: TypeRaw
@@ -1174,7 +1179,10 @@ function GreenTea.string(limits: {
 						return Cause.err(
 							self,
 							input,
-							`input length out of range (# graphemes: {graphemeLength} from {truncate(15, tostringLiteral(input))})`
+							`input length out of range (# graphemes: {graphemeLength} from {truncate(
+								15,
+								tostringLiteral(input)
+							)})`
 						)
 					end
 				end
@@ -1231,9 +1239,9 @@ end
 
 --- @within GreenTea
 --- @function types not listed here
---- A few methods are not listed in the docs so that they don't clutter with basic types.  
+--- A few methods are not listed in the docs so that they don't clutter with basic types.\
 --- Here's a list: userdata, Vector2, vector, Vector3, CFrame, Color3, UDim, UDim2,
---- Ray, Rect, Region3, BrickColor, Font, Enum, EnumItem.  
+--- Ray, Rect, Region3, BrickColor, Font, Enum, EnumItem.\
 --- For the most part, any Luau type you'd naturally write likely also exists under GreenTea.
 --- Less common types are excluded (for now) to not clutter the library.
 --- For the ones that don't exist, you can usually use `isTypeof` or `isType`.
@@ -1243,9 +1251,12 @@ local typePackCast: <Out...>(...any) -> Out... = function(...)
 end
 
 --- Creates a new GreenTea Type that matches a repeating value.
-function GreenTea.vararg<T>(type: T, options: {
-	length: RangeInput?,
-}?): ...T
+function GreenTea.vararg<T>(
+	type: T,
+	options: {
+		length: RangeInput?,
+	}?
+): ...T
 	local lengthRange = options and options.length and parseRange(options.length)
 	local varargType: Type = GreenTea.typeof(type :: any)
 
@@ -1270,7 +1281,14 @@ function GreenTea.vararg<T>(type: T, options: {
 			end
 
 			if lengthRange and not checkRange(input.n, lengthRange) then
-				table.insert(errs, { type = self, input = table.pack(...), message = `expected input count to be within range {displayRange(lengthRange)}` })
+				table.insert(
+					errs,
+					{
+						type = self,
+						input = table.pack(...),
+						message = `expected input count to be within range {displayRange(lengthRange)}`,
+					}
+				)
 				return Cause.new(false, errs)
 			end
 
@@ -1355,7 +1373,7 @@ function GreenTea.tuple<T...>(...: T...): T...
 		contents[index] = GreenTea.typeof(contents[index])
 	end
 	contents.n = nil :: any
-	local contents: { Type } = contents :: any;
+	local contents: { Type } = contents :: any
 
 	local vararg: Type?
 	if contents[#contents] and contents[#contents].kind == "vararg" then
@@ -1465,10 +1483,7 @@ end
 --- `type.fn.args` and `type.fn.returns` to run runtime typechecking yourself.
 --- For example, if you were building a RemoteFunction wrapper, you could use
 --- `type.fn.returns` to check that the client returned correct values.
-function GreenTea.fn<Args..., Returns...>(
-	args: (Args...) -> (),
-	returns: () -> Returns...
-): ((Args...) -> Returns...)
+function GreenTea.fn<Args..., Returns...>(args: (Args...) -> (), returns: () -> Returns...): (Args...) -> Returns...
 	-- The extra parens above are *IMPORTANT*. They prevent some weird behavior
 	-- where Luau wants to make this function return `(Args...) -> Returns..., Args...`
 
@@ -1554,7 +1569,10 @@ end
 
 --- Creates a new GreenTea Type that matches a function with any args and any returns.
 function GreenTea.anyfn(): (...any) -> ...any
-	return GreenTea.fn(GreenTea.args(GreenTea.vararg(GreenTea.any({ allowNil = true }))), GreenTea.returns(GreenTea.vararg(GreenTea.any({ allowNil = true })))) :: any
+	return GreenTea.fn(
+		GreenTea.args(GreenTea.vararg(GreenTea.any({ allowNil = true }))),
+		GreenTea.returns(GreenTea.vararg(GreenTea.any({ allowNil = true })))
+	) :: any
 end
 
 --- Creates a new GreenTea Type that "smuggles" a tuple as a single value by
@@ -1590,11 +1608,14 @@ export type TuplePacked<T...> = () -> T...
 --- `raw` allows for checking any key types as literally matching to values, including numbers
 --- and other non-strings. This _will not_ appear correct as a Luau type; it is primarily
 --- intended for compatibility with other runtime typechecking libraries.
-function GreenTea.table<T>(contents: T, options: {
-	array: boolean?,
-	count: RangeInput?,
-	raw: boolean?,
-}?): T
+function GreenTea.table<T>(
+	contents: T,
+	options: {
+		array: boolean?,
+		count: RangeInput?,
+		raw: boolean?,
+	}?
+): T
 	local array: boolean? = options and options.array or nil
 	local countRange = if options and options.count then parseRange(options.count) else nil
 
@@ -1698,7 +1719,11 @@ function GreenTea.table<T>(contents: T, options: {
 
 						count += 1
 						if countRange and not checkRange(count, countRange) then
-							return Cause.err(self, input, `expected number of items to be in range {displayRange(countRange)}, but we saw {count} (or more) items`)
+							return Cause.err(
+								self,
+								input,
+								`expected number of items to be in range {displayRange(countRange)}, but we saw {count} (or more) items`
+							)
 						end
 						cause = indexerKey._matches(key)
 						if not cause.ok then
@@ -1712,11 +1737,23 @@ function GreenTea.table<T>(contents: T, options: {
 							maxN = math.max(maxN, key)
 							if array then
 								if key < 1 then
-									return Cause.err(self, input, `key {key} is less than 1, but we expected a contiguous array`)
+									return Cause.err(
+										self,
+										input,
+										`key {key} is less than 1, but we expected a contiguous array`
+									)
 								elseif math.floor(key) ~= key then
-									return Cause.err(self, input, `key {key} is not an integer, but we expected a contiguous array`)
+									return Cause.err(
+										self,
+										input,
+										`key {key} is not an integer, but we expected a contiguous array`
+									)
 								elseif key ~= key then
-									return Cause.err(self, input, `key {key} is NaN, but we expected a contiguous array`)
+									return Cause.err(
+										self,
+										input,
+										`key {key} is NaN, but we expected a contiguous array`
+									)
 								end
 							end
 						end
@@ -1725,7 +1762,11 @@ function GreenTea.table<T>(contents: T, options: {
 			end
 
 			if countRange and not checkRange(count, countRange) then
-				return Cause.err(self, input, `expected number of items to be in range {displayRange(countRange)}, but we saw only {count} items`)
+				return Cause.err(
+					self,
+					input,
+					`expected number of items to be in range {displayRange(countRange)}, but we saw only {count} items`
+				)
 			end
 
 			if array and count ~= maxN then
@@ -1733,7 +1774,12 @@ function GreenTea.table<T>(contents: T, options: {
 
 				cause = indexerValue._matches(nil)
 				if not cause.ok then
-					return Cause.extendErr(cause, self, input, `expected contiguous array, but we saw only {count} items when the max index was {maxN}`)
+					return Cause.extendErr(
+						cause,
+						self,
+						input,
+						`expected contiguous array, but we saw only {count} items when the max index was {maxN}`
+					)
 				end
 			end
 
@@ -1784,7 +1830,10 @@ function GreenTea.table<T>(contents: T, options: {
 
 			local result = `{leftCurly} {table.concat(items, ", ")} {rightCurly}`
 			if lineLengthOf(result) > maxLineLength or string.find(result, "\n", 1, true) then
-				return highlightWrap(`{leftCurly}\n{tabFirst(table.concat(items, ",\n"))}\n{rightCurly}`, highlight[self])
+				return highlightWrap(
+					`{leftCurly}\n{tabFirst(table.concat(items, ",\n"))}\n{rightCurly}`,
+					highlight[self]
+				)
 			else
 				return highlightWrap(result, highlight[self])
 			end
@@ -1805,9 +1854,12 @@ end
 
 --- Creates a new GreenTea Type that matches an array of values.\
 --- Convenience function that calls GreenTea.table internally.
-function GreenTea.array<T>(value: T, options: {
-	count: RangeInput?,
-}?): { T }
+function GreenTea.array<T>(
+	value: T,
+	options: {
+		count: RangeInput?,
+	}?
+): { T }
 	return GreenTea.table({ GreenTea.typeof(value) }, {
 		array = true,
 		count = options and options.count,
@@ -1816,9 +1868,13 @@ end
 
 --- Creates a new GreenTea Type that matches a dictionary of values.\
 --- Convenience function that calls GreenTea.table internally.
-function GreenTea.dictionary<K, V>(key: K, value: V, options: {
-	count: RangeInput?,
-}?): { [K]: V }
+function GreenTea.dictionary<K, V>(
+	key: K,
+	value: V,
+	options: {
+		count: RangeInput?,
+	}?
+): { [K]: V }
 	return GreenTea.table({ [GreenTea.typeof(key)] = GreenTea.typeof(value) }, {
 		count = options and options.count,
 	})
@@ -1958,7 +2014,7 @@ local intersection: IntersectionType = function<T>(...: T): ...T
 			break
 		end
 	end
-	
+
 	for index = 1, types.n do
 		if types[index] == nil then
 			error(
@@ -2069,7 +2125,9 @@ function GreenTea.typeof<T>(value: T, recursionCheck: { [any]: any }?): T
 	end
 	if greenteaConstructorsSet[value] then
 		local name = greenteaConstructorsSet[value]
-		error(`Attempt to use a GreenTea constructor without calling it: you used {name}; did you mean to use {name}() instead?`)
+		error(
+			`Attempt to use a GreenTea constructor without calling it: you used {name}; did you mean to use {name}() instead?`
+		)
 	end
 
 	local recursionCheck = recursionCheck or {} :: typeof(assert(recursionCheck))
@@ -2156,7 +2214,7 @@ function GreenTea.build<T...>(...: T...): BuiltType<T...>
 	else
 		gtType = GreenTea.typeof((castTuple(...)))
 	end
-	
+
 	gtType.type = function(self: Type)
 		return gtType
 	end
