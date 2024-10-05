@@ -1,4 +1,3 @@
-
 local GreenTea = require(script.GreenTea)
 local InstanceClasses = require(script.InstanceClasses)
 local tCompat = require(script.tCompat)

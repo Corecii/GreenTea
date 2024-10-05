@@ -1281,14 +1281,11 @@ function GreenTea.vararg<T>(
 			end
 
 			if lengthRange and not checkRange(input.n, lengthRange) then
-				table.insert(
-					errs,
-					{
-						type = self,
-						input = table.pack(...),
-						message = `expected input count to be within range {displayRange(lengthRange)}`,
-					}
-				)
+				table.insert(errs, {
+					type = self,
+					input = table.pack(...),
+					message = `expected input count to be within range {displayRange(lengthRange)}`,
+				})
 				return Cause.new(false, errs)
 			end
 

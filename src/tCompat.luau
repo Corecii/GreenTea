@@ -25,8 +25,6 @@ local function asGreenTeaType(thing: any): any
 	end
 end
 
-
-
 local implicitConstructors = {
 	boolean = GreenTea.boolean :: Typechecker,
 	buffer = (GreenTea.buffer :: any) :: Typechecker,
@@ -223,7 +221,7 @@ end :: TypecheckerConstr<any>
 t.strictArray = function(...: any): any
 	local arrayTypes = { ... }
 	arrayTypes[GreenTea.any()] = GreenTea.never()
-	
+
 	local count = select("#", ...)
 	for index = 1, count do
 		arrayTypes[index] = asGreenTeaType(arrayTypes[index])
@@ -267,7 +265,7 @@ local function tChildren(children: { [string]: any })
 			if not thing:FindFirstChild(key) then
 				return false, "missing child " .. key
 			end
-			
+
 			local success, err = typechecker(thing:FindFirstChild(key))
 			if not success then
 				return false, err
@@ -342,7 +340,7 @@ t.strict = function<T>(typechecker: T): T
 	return function(...)
 		typechecker:assert(...)
 	end :: any
-end 
+end
 
 type exportedTypes = typeof(t) & typeof(implicitConstructors)
 
@@ -353,7 +351,7 @@ local exportedRuntime = setmetatable(t :: any, {
 		else
 			return nil
 		end
-	end
+	end,
 })
 
 return exportedRuntime :: exportedTypes

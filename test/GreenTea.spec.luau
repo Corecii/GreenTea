@@ -301,7 +301,12 @@ basicTest({
 	kind = "number",
 	fn = gt.number,
 	values = {
-		5, 5.5, -5.5, 0, math.huge, -math.huge,
+		5,
+		5.5,
+		-5.5,
+		0,
+		math.huge,
+		-math.huge,
 	},
 	skipBasicTypeCheck = true,
 })
@@ -358,7 +363,9 @@ basicTest({
 	kind = "string",
 	fn = gt.string,
 	values = {
-		"hi", "hello world", "",
+		"hi",
+		"hello world",
+		"",
 	},
 	skipBasicTypeCheck = true,
 })
@@ -443,7 +450,9 @@ describe("gt.string limits", function()
 		expect(gt.string():format()).toBe("string")
 
 		expect(gt.string({ unicode = true }):format()).toBe("string<unicode>")
-		expect(gt.string({ graphemes = "[0, 10]", bytes = "[0, 10]" }):format()).toBe("string<graphemes [0, 10], bytes [0, 10]>")
+		expect(gt.string({ graphemes = "[0, 10]", bytes = "[0, 10]" }):format()).toBe(
+			"string<graphemes [0, 10], bytes [0, 10]>"
+		)
 		expect(gt.string({ bytes = "[0, 10]" }):format()).toBe("string<bytes [0, 10]>")
 		expect(gt.string({ pattern = "[a-z]+" }):format()).toBe('string<pattern "[a-z]+">')
 		expect(gt.string({ pattern = "[a-z]+\n" }):format()).toBe('string<pattern "[a-z]+\\n">')
@@ -453,7 +462,6 @@ describe("gt.string limits", function()
 		)
 	end)
 end)
-
 
 basicTest({
 	kind = "thread",
@@ -491,11 +499,15 @@ describe("gt.thread options", function()
 	it("should format as 'thread' or 'thread<statuses>'", function()
 		expect(gt.thread():format()).toBe("thread")
 		expect(gt.thread({ status = "running" }):format()).toBe("thread<status: running>")
-		expect(gt.thread({ status = { "running" }}):format()).toBe("thread<status: running>")
-		expect(gt.thread({ status = { "running", "suspended" } }):format()).toBe("thread<status: (running | suspended)>")
+		expect(gt.thread({ status = { "running" } }):format()).toBe("thread<status: running>")
+		expect(gt.thread({ status = { "running", "suspended" } }):format()).toBe(
+			"thread<status: (running | suspended)>"
+		)
 
 		-- should format alphabetically:
-		expect(gt.thread({ status = { "suspended", "running" } }):format()).toBe("thread<status: (running | suspended)>")
+		expect(gt.thread({ status = { "suspended", "running" } }):format()).toBe(
+			"thread<status: (running | suspended)>"
+		)
 	end)
 
 	it("should not allow invalid statuses", function()
@@ -669,9 +681,7 @@ describe("gt.table", function()
 			end,
 		})
 
-		expect(gt.table({ a = gt.number(), b = gt.number(), c = gt.number() }):matches(t)).toBe(
-			true
-		)
+		expect(gt.table({ a = gt.number(), b = gt.number(), c = gt.number() }):matches(t)).toBe(true)
 		expect(gt.table({ [gt.string()] = gt.number() }):matches(t)).toBe(true)
 		expect(gt.table({ [gt.string()] = gt.string() }):matches(t)).toBe(false)
 	end)
@@ -749,7 +759,7 @@ describe("gt.intersection", function()
 		expect(gt.intersection(gt.number(), gt.string(), gt.none()):format()).toBe("number & string & nil")
 		expect(gt.intersection(gt.number()):format()).toBe("number")
 		expect(gt.intersection(gt.none()):format()).toBe("nil")
-		
+
 		expect(function()
 			gt.intersection()
 		end).toThrow()

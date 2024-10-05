@@ -1,3 +1,3 @@
 return {
-	testMatch = { "**/*.spec" }
+	testMatch = { "**/*.spec" },
 }

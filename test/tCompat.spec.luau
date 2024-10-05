@@ -157,17 +157,17 @@ describe("array", function()
 		local anyArray = t.array(t.any)
 		local stringValues = t.values(t.string)
 		assert(not (anyArray("foo")))
-		assert(anyArray({1, "2", 3} :: { any }))
-		assert(not (stringArray({1, "2", 3} :: { any })))
+		assert(anyArray({ 1, "2", 3 } :: { any }))
+		assert(not (stringArray({ 1, "2", 3 } :: { any })))
 		assert(not (stringArray()))
 		assert(not (stringValues()))
-		assert(anyArray({"1", "2", "3"}, t.string))
+		assert(anyArray({ "1", "2", "3" }, t.string))
 		assert(not (anyArray({
-			foo = "bar"
+			foo = "bar",
 		})))
 		assert(not (anyArray({
 			[1] = "non",
-			[5] = "sequential"
+			[5] = "sequential",
 		})))
 	end)
 
@@ -185,19 +185,19 @@ end)
 it("should support map types", function()
 	local stringNumberMap = t.map(t.string, t.number)
 	assert(stringNumberMap({}))
-	assert(stringNumberMap({a = 1}))
-	assert(not (stringNumberMap({[1] = "a"})))
-	assert(not (stringNumberMap({a = "a"})))
+	assert(stringNumberMap({ a = 1 }))
+	assert(not (stringNumberMap({ [1] = "a" })))
+	assert(not (stringNumberMap({ a = "a" })))
 	assert(not (stringNumberMap()))
 end)
 
 it("should support set types", function()
 	local stringSet = t.set(t.string)
 	assert(stringSet({}))
-	assert(stringSet({a = true}))
-	assert(not (stringSet({[1] = "a"})))
-	assert(not (stringSet({a = "a"})))
-	assert(not (stringSet({a = false})))
+	assert(stringSet({ a = true }))
+	assert(not (stringSet({ [1] = "a" })))
+	assert(not (stringSet({ a = "a" })))
+	assert(not (stringSet({ a = false })))
 	assert(not (stringSet()))
 end)
 
@@ -255,27 +255,26 @@ it("should support deep interface types", function()
 	local IPlayer = t.interface({
 		name = t.string,
 		inventory = t.interface({
-			size = t.number
-		})
+			size = t.number,
+		}),
 	})
 
 	assert(IPlayer({
 		name = "TestPlayer",
 		inventory = {
-			size = 1
-		}
+			size = 1,
+		},
 	}))
 
 	assert(not (IPlayer({
 		inventory = {
-			size = 1
-		}
+			size = 1,
+		},
 	})))
 
 	assert(not (IPlayer({
 		name = "TestPlayer",
-		inventory = {
-		}
+		inventory = {},
 	})))
 
 	assert(not (IPlayer({
@@ -287,25 +286,24 @@ it("should support deep optional interface types", function()
 	local IPlayer = t.interface({
 		name = t.string,
 		inventory = t.optional(t.interface({
-			size = t.number
-		}))
+			size = t.number,
+		})),
 	})
 
 	assert(IPlayer({
-		name = "TestPlayer"
+		name = "TestPlayer",
 	}))
 
 	assert(not (IPlayer({
 		name = "TestPlayer",
-		inventory = {
-		}
+		inventory = {},
 	})))
 
 	assert(IPlayer({
 		name = "TestPlayer",
 		inventory = {
-			size = 1
-		}
+			size = 1,
+		},
 	}))
 end)
 
@@ -421,20 +419,20 @@ end)
 
 it("should not treat NaN as numbers", function()
 	assert(t.number(1))
-	assert(not (t.number(0/0)))
+	assert(not (t.number(0 / 0)))
 	assert(not (t.number("1")))
 end)
 
 it("should not treat numbers as NaN", function()
 	assert(not (t.nan(1)))
-	assert(t.nan(0/0))
+	assert(t.nan(0 / 0))
 	assert(not (t.nan("1")))
 end)
 
 it("should allow union of number and NaN", function()
 	local numberOrNaN = t.union(t.number, t.nan)
 	assert(numberOrNaN(1))
-	assert(numberOrNaN(0/0))
+	assert(numberOrNaN(0 / 0))
 	assert(not (numberOrNaN("1")))
 end)
 
@@ -452,9 +450,12 @@ end)
 
 it("should support children", function()
 	local myInterface = t.interface({
-		buttonInFrame = t.intersection(t.instanceOf("Frame"), t.children({
-			MyButton = t.instanceOf("ImageButton")
-		}))
+		buttonInFrame = t.intersection(
+			t.instanceOf("Frame"),
+			t.children({
+				MyButton = t.instanceOf("ImageButton"),
+			})
+		),
 	})
 
 	assert(not (t.children({})(5)))
@@ -494,8 +495,8 @@ end)
 it("should support t.instanceOf shorthand", function()
 	local myInterface = t.interface({
 		buttonInFrame = t.instanceOf("Frame", {
-			MyButton = t.instanceOf("ImageButton")
-		})
+			MyButton = t.instanceOf("ImageButton"),
+		}),
 	})
 
 	assert(not (t.children({})(5)))
@@ -535,8 +536,8 @@ end)
 it("should support t.instanceIsA shorthand", function()
 	local myInterface = t.interface({
 		buttonInFrame = t.instanceIsA("Frame", {
-			MyButton = t.instanceIsA("ImageButton")
-		})
+			MyButton = t.instanceIsA("ImageButton"),
+		}),
 	})
 
 	assert(not (t.children({})(5)))
@@ -603,15 +604,15 @@ end)
 it("should support t.strictArray", function()
 	local fixedArrayCheck = t.strictArray(t.number, t.number)
 
-	assert(fixedArrayCheck({1, 2}))
-	assert(not fixedArrayCheck({1, 2, 3}))
-	assert(not fixedArrayCheck({10}))
-	assert(not fixedArrayCheck({"Hello", 10} :: { any }))
+	assert(fixedArrayCheck({ 1, 2 }))
+	assert(not fixedArrayCheck({ 1, 2, 3 }))
+	assert(not fixedArrayCheck({ 10 }))
+	assert(not fixedArrayCheck({ "Hello", 10 } :: { any }))
 	assert(not fixedArrayCheck({ Foo = "Bar" }))
 
 	local fixedArrayCheck2 = t.strictArray(t.number, t.number, t.optional(t.string))
 
-	assert(fixedArrayCheck2({10, 20}))
-	assert(fixedArrayCheck2({10, 20, "Hello"} :: { any }))
-	assert(not fixedArrayCheck2({10, 20, 30}))
+	assert(fixedArrayCheck2({ 10, 20 }))
+	assert(fixedArrayCheck2({ 10, 20, "Hello" } :: { any }))
+	assert(not fixedArrayCheck2({ 10, 20, 30 }))
 end)
