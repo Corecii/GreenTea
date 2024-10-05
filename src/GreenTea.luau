@@ -380,7 +380,7 @@ Type.__index = Type
 
 --- @type Cause { ok: boolean, encompassingType: Type?, errs: { { type: any, input: any?, message: string? } }, formatErr: (self: Cause) -> string }
 --- @within Type
---- Represents the result of a :matches() call.\  
+--- Represents the result of a :matches() call.\
 --- Includes a `__tostring` metamethod, which formats to a readable error.
 
 --- @within Type
@@ -469,7 +469,7 @@ function Type.wrapFn<T>(self: Type, fn: T): T
 end
 
 --- In type definitions via `typeof(Type.type())`, returns the Luau type this
---- GreenTea type represents.\  
+--- GreenTea type represents.\
 --- At runtime, returns self. This allows you to compose complex GreenTea types
 --- by passing GreenTea.type() into a GreenTea constructor. (Only applies when
 --- "built" with `GreenTea.build(GreenTea constructors here)`)
@@ -741,8 +741,8 @@ function GreenTea.any(options: { allowNil: boolean? }?): any
 	return setmetatable(self :: any, Type)
 end
 
---- Creates a new GreenTea Type that matches any value, excluding nil.\  
---- This returns the unknown type, which has different behavior from any.\  
+--- Creates a new GreenTea Type that matches any value, excluding nil.\
+--- This returns the unknown type, which has different behavior from any.\
 --- The runtime typechecking behavior is the same as GreenTea.any.
 function GreenTea.unknown(options: { allowNil: boolean? }?): unknown
 	local allowNil = options and options.allowNil
@@ -900,7 +900,7 @@ end
 
 GreenTea.none = newBasicType("nil") :: () -> nil
 
---- Creates a new GreenTea Type that matches a value literally.\  
+--- Creates a new GreenTea Type that matches a value literally.\
 --- This is checked with a basic == comparison.
 function GreenTea.literal<T>(value: T): T
 	local literalStr
@@ -1031,14 +1031,14 @@ GreenTea.__Cause = Cause
 
 --- @prop isA { [string]: any }
 --- @within GreenTea
---- Types for individual instance classes.\  
---- Index this to get a type that matches instances of that class.\  
---- For dynamic class names, or for classes not yet added here,\  
+--- Types for individual instance classes.\
+--- Index this to get a type that matches instances of that class.\
+--- For dynamic class names, or for classes not yet added here,\
 --- call this with GreenTea.IsA("ClassName").
 
---- Creates a new GreenTea Type that matches number values.\  
---- Optionally, you can specify a range and whether the number must be an integer.\  
---- Regardless of specified limits, the returned Luau type will be a basic number. Limit checking will only be done at runtime.\  
+--- Creates a new GreenTea Type that matches number values.\
+--- Optionally, you can specify a range and whether the number must be an integer.\
+--- Regardless of specified limits, the returned Luau type will be a basic number. Limit checking will only be done at runtime.\
 --- NOTE: NaN is rejected by default. NaN tends to propogate and "poison" numeric values,
 --- and it's rarely actually desired. If you want to _allow_ NaN, set `nan = true` in the limits table.
 function GreenTea.number(limits: {
@@ -1116,11 +1116,11 @@ local function countGraphemes(str: string): number?
 	end
 end
 
---- Creates a new GreenTea Type that matches string values.\  
---- Optionally, you can specify a pattern, a length range, and whether the string must be utf8.\  
+--- Creates a new GreenTea Type that matches string values.\
+--- Optionally, you can specify a pattern, a length range, and whether the string must be utf8.\
 --- NOTE: this supports both "byte length" and "grapheme length". Grapheme length is the number of visible
 --- characters. In non-english languages, the number of bytes can be significantly higher than the number
---- of graphemes.\  
+--- of graphemes.\
 --- When using graphemes limit, you should still set a (much-higher) bytes limit to prevent abuse, since
 --- graphemes have no upper limit to their size. For this reason, this constructor will error if you
 --- do not specify a bytes limit when using graphemes limit. If you really want infinite byte length, set
@@ -1340,8 +1340,8 @@ local function simplifyGtTuples<T...>(...: T...): T...
 	return typePackCast(unpack(args, 1, args.n))
 end
 
---- Creates a new GreenTea Type that matches a tuple of values.\  
---- Specify the final value with GreenTea.vararg to match a repeating final value.\  
+--- Creates a new GreenTea Type that matches a tuple of values.\
+--- Specify the final value with GreenTea.vararg to match a repeating final value.\
 --- This properly accepts a tuple as the final or only argument, so don't fear
 --- passing a tuple into this by accident.
 function GreenTea.tuple<T...>(...: T...): T...
@@ -1457,10 +1457,10 @@ function GreenTea.returns<T...>(...: T...): () -> T...
 	return GreenTea.tuple(...) :: any
 end
 
---- Creates a new GreenTea Type that matches a function.\  
+--- Creates a new GreenTea Type that matches a function.\
 --- This cannot perform any runtime checks on the function's args or returns.
---- The args and returns exist primarily to have an accurate Luau type.\  
---- They _can_ be inspected at runtime with `type.fn.args` and `type.fn.returns`.\  
+--- The args and returns exist primarily to have an accurate Luau type.\
+--- They _can_ be inspected at runtime with `type.fn.args` and `type.fn.returns`.\
 --- If you're building a module that consumes GreenTea types, you can use
 --- `type.fn.args` and `type.fn.returns` to run runtime typechecking yourself.
 --- For example, if you were building a RemoteFunction wrapper, you could use
@@ -1558,12 +1558,12 @@ function GreenTea.anyfn(): (...any) -> ...any
 end
 
 --- Creates a new GreenTea Type that "smuggles" a tuple as a single value by
---- packing it into the returns.\  
+--- packing it into the returns.\
 --- This is useful for accepting GreenTea tuple types to a spot that only accepts a single value.
 --- The actual returned type here is equivalent to
 --- `GreenTea.fn(GreenTea.args(), GreenTea.returns(...))`
 --- so some inspections is required at runtime to pull out the tuple:
---- `type.fn.returns` is the actual tuple value.\  
+--- `type.fn.returns` is the actual tuple value.\
 --- With Luau typechecking, you can "unsmuggle" the tuple by doing
 --- `typeof(smuggledTuple())` to get the tuple type.
 function GreenTea.tuplePacked<T...>(...: T...): () -> T...
@@ -1572,21 +1572,21 @@ end
 
 export type TuplePacked<T...> = () -> T...
 
---- Creates a new GreenTea Type that matches a table.\  
---- The `contents` table should be a dictionary of string keys to types.\  
---- An indexer can be provided with `{ [keyGreenTeaType] = valueType }`.\  
+--- Creates a new GreenTea Type that matches a table.\
+--- The `contents` table should be a dictionary of string keys to types.\
+--- An indexer can be provided with `{ [keyGreenTeaType] = valueType }`.\
 --- This currently respects both `__iter` and `__index` on both the input
---- `contents` table and tables being checked against.\  
+--- `contents` table and tables being checked against.\
 --- Tables are non-strict by default. Extra values are allowed. If you'd
 --- like to make a table strict, add an indexer that denies extra values, like
---- `[gt.any()] = gt.never()`.\  
+--- `[gt.any()] = gt.never()`.\
 --- By default, array-like definitions do not check for holes. If you would like
---- to check for holes and ensure the array is contiguous, set array to true.\  
+--- to check for holes and ensure the array is contiguous, set array to true.\
 --- If you'd like to enforce an item limit, specify it `count` the options table. This limits
 --- the number of items found by the indexer. Items in the "struct portion" of the
 --- table definition do not count. This is _not_ a #table check: the actual items
 --- are counted one-by-one as we check them. This lets you also limit the number of items
---- in cases like dynamic dictionaries.\  
+--- in cases like dynamic dictionaries.\
 --- `raw` allows for checking any key types as literally matching to values, including numbers
 --- and other non-strings. This _will not_ appear correct as a Luau type; it is primarily
 --- intended for compatibility with other runtime typechecking libraries.
@@ -1934,9 +1934,9 @@ end :: any
 --- @within GreenTea
 --- @param ... T...
 --- @return T...
---- Creates a new GreenTea Type that matches a union of types.\  
---- This is analogous to the Luau `type1 | type2 | ...` syntax.\  
---- This has convenient type definitions for up to 5 input types.\  
+--- Creates a new GreenTea Type that matches a union of types.\
+--- This is analogous to the Luau `type1 | type2 | ...` syntax.\
+--- This has convenient type definitions for up to 5 input types.\
 --- When specifying more then 5 input types, you will have to typecast the
 --- first item to a Luau type union in order to get correct types.
 
@@ -2040,9 +2040,9 @@ end :: any
 --- @within GreenTea
 --- @param ... T...
 --- @return T...
---- Creates a new GreenTea Type that matches an intersection of types.\  
---- This is analogous to the Luau `type1 & type2 & ...` syntax.\  
---- This has convenient type definitions for up to 5 input types.\  
+--- Creates a new GreenTea Type that matches an intersection of types.\
+--- This is analogous to the Luau `type1 & type2 & ...` syntax.\
+--- This has convenient type definitions for up to 5 input types.\
 --- When specifying more then 5 input types, you will have to typecast the
 --- first item to a Luau type intersection in order to get correct types.
 
@@ -2060,8 +2060,8 @@ GreenTea.allOf = GreenTea.intersection
 
 GreenTea.opt = GreenTea.optional
 
---- Creates a new GreenTea Type matching the inferred type of `value`.\  
---- A runtime, this passes tables to `GreenTea.table`, functions to `GreenTea.fn`, and so on.\  
+--- Creates a new GreenTea Type matching the inferred type of `value`.\
+--- A runtime, this passes tables to `GreenTea.table`, functions to `GreenTea.fn`, and so on.\
 --- This results in a runtime-inferred type roughly equivalent to the Luau typechecker's inferred types.
 function GreenTea.typeof<T>(value: T, recursionCheck: { [any]: any }?): T
 	if GreenTea.isGtType(value) then
@@ -2097,10 +2097,10 @@ function GreenTea.typeof<T>(value: T, recursionCheck: { [any]: any }?): T
 	return GreenTea.isTypeof(typeof(value), value) :: any
 end
 
---- Typecasts a value to a GreenTea type.\  
---- At runtime this will error if the passed-in type is _not_ a GreenTea type.\  
+--- Typecasts a value to a GreenTea type.\
+--- At runtime this will error if the passed-in type is _not_ a GreenTea type.\
 --- This exists as a convenience function because `type :: GreenTea.Type` is usually
---- not possible without an any cast like `(type :: any) :: GreenTea.Type`.\  
+--- not possible without an any cast like `(type :: any) :: GreenTea.Type`.\
 --- This errors at runtime if the passed-in type is not a GreenTea type.
 function GreenTea.typecast(value: any): Type
 	assert(GreenTea.isGtType(value), "value must be a GreenTea type")
@@ -2163,7 +2163,7 @@ function GreenTea.build<T...>(...: T...): BuiltType<T...>
 	return gtType
 end
 
---- Adds user-specified metadata to a type.\  
+--- Adds user-specified metadata to a type.\
 --- Each key/value pair is added to the type's `meta` table.
 --- This is a shallow merge: any matching key/value pair will be overwritten,
 --- and all other key/value pairs will be kept as-is.

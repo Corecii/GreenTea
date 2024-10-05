@@ -61,13 +61,24 @@ If you have a Mac feel free to implement this for your platform in the lune scri
 We disable LocalShadow because it's the only way to redefine a variable's types.
 We'd like to remove this when it's not longer necessary.
 
-## Doc Comments
+## Doc Comments and Running Moonwave
 
-Doc comments should be compatible with both moonwave and with luau-lsp.
+Luau-lsp and Moonwave have conflicting definitions of explicit newlines in doc comments:
+- Luau-lsp only works with lines ending in a backslash (`\`)
+- Moonwave only works with lines ending in two spaces (`  `)
 
-This poses a problem for newlines: luau-lsp only works with `\` for newlines, but moonwave only works with double-spaces for newlines.
+In source, we use a backslash to indicate a newline in a doc comment.
+We then process the source with our moonwave helper Lune script, `moonwave`,
+which replaces the backslashes with two spaces.
 
-For now, we combine these two. This makes the moonwave docs look funny, because it won't omit the `\` before newlines, but 🤷‍♀️ what can you do.
+Generally, running moonwave should always go through the `moonwave` Lune script.
+The script prepares a whole pseudo-repo for Moonwave to work in with automated
+fixes and all necessary files.
+ 
+The moonwave script can be run like the moonwave command once moonwave is
+globally installed:
+- `lunar moonwave dev`, `lunar moonwave build --publish`, etc. if [lunar](https://github.com/corecii/lunar) is installed (via rokit)
+- `lune run moonwave -- dev`, `lune run moonwave -- build --publish`, etc. otherwise
 
 ## License Credits
 

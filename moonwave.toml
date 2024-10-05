@@ -25,11 +25,6 @@ href = "/Development"
 label = "Development"
 position = "left"
 
-[[navbar.items]]
-href = "/Development#doc-comments"
-label = "(the / before newlines is not a bug)"
-position = "right"
-
 [footer]
 style = "dark"
 copyright = "Copyright © 2024 Shae A. Built with Moonwave and Docusaurus"

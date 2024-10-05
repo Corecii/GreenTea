@@ -1,10 +1,11 @@
-.vscode/settings.json
+/.vscode/settings.json
 
-Packages
-ServerPackages
-DevPackages
+/Packages
+/ServerPackages
+/DevPackages
 
-sourcemap.json
-wally.lock
+/sourcemap.json
+/wally.lock
 
-build
+/build
+/moonwave
