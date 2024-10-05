@@ -80,6 +80,19 @@ globally installed:
 - `lunar moonwave dev`, `lunar moonwave build --publish`, etc. if [lunar](https://github.com/corecii/lunar) is installed (via rokit)
 - `lune run moonwave -- dev`, `lune run moonwave -- build --publish`, etc. otherwise
 
+## Removed Classes
+
+When Roblox removes an instance class which is present in InstanceClasses, we
+_cannot_ just remove it from the InstanceClasses table because this may break code
+which previously worked.
+
+Instead, we should leave the runtime type definition for the class present, but
+alias its Luau type to `never`. This will trigger a type error in any code that
+uses it, but won't change runtime behavior. Type-erroring is wanted behavior:
+this class is removed from the engine, so anything referring to it both is
+already type-erroring and needs to be changed. Changing runtime behavior is
+_not_ wanted in non-major releases.
+
 ## License Credits
 
 ### Favicon
