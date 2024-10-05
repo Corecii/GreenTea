@@ -4,6 +4,11 @@
 
 Nothing yet!
 
+## 0.4.9
+
+- Remove class which was removed from the engine.
+- Add docs for what to do when a class is removed from the engine.
+
 ## 0.4.8
 
 - Optimizations
