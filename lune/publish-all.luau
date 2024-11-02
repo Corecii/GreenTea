@@ -27,6 +27,20 @@ local function exec(cmdline: string | { string }, options: process.SpawnOptions?
 	return result.stdout:gsub("^[\r\n]*", ""):gsub("[\r\n]*$", "")
 end
 
+local function zip(out: string, items: { string })
+	local result
+	if process.os == "windows" then
+		result = process.spawn("C:\\Windows\\system32\\tar.exe", { "-a", "-cf", out, unpack(items) })
+	else
+		result = process.spawn("zip", { "-r", out, unpack(items) })
+	end
+
+	if not result.ok then
+		warn(`Failed to zip: ({result.code}) {result.stderr}`)
+		process.exit(result.code)
+	end
+end
+
 local function sanitizePattern(str: string)
 	return string.gsub(str, "([%.%-%*%+%?%%])", "%%%1")
 end
@@ -97,6 +111,24 @@ exec("pesde publish --yes")
 
 exec("pesde install", { cwd = "src-t-standalone-pesde" })
 exec("pesde publish --yes", { cwd = "src-t-standalone-pesde" })
+
+-- Add lune to release
+
+if fs.isDir("lune-build") then
+	fs.removeDir("lune-build")
+end
+
+fs.writeDir("lune-build")
+
+fs.copy("src", "lune-build/GreenTea")
+zip("GreenTea-lune.zip", { "-C", "lune-build", "GreenTea" })
+
+exec(`gh release upload v{wally.package.version} GreenTea-lune.zip`)
+
+fs.removeDir("lune-build")
+fs.removeFile("GreenTea-lune.zip")
+
+-- Reset FS changes
 
 exec("git reset --hard HEAD", { shell = true })
 
