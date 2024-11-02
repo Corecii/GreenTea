@@ -23,8 +23,8 @@ for _, name in fs.readDir("src") do
 	end)
 end
 
-rewrite(`src-t-standalone-pesde/pesde.toml`, function(str)
-	return str:gsub("require%(script.Parent.roblox_packages.GreenTea%)", 'require("../pkgs/GreenTea")')
+rewrite(`src-t-standalone-pesde/t.luau`, function(str)
+	return str:gsub("require%(script.Parent.roblox_packages.GreenTea%)", 'require("./lune_packages/GreenTea")')
 end)
 
 rewrite("pesde.toml", function(str)

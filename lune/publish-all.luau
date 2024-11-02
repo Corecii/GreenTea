@@ -87,4 +87,19 @@ exec("pesde publish --yes")
 exec("pesde install", { cwd = "src-t-standalone-pesde" })
 exec("pesde publish --yes", { cwd = "src-t-standalone-pesde" })
 
+-- Publish lune version
+-- (makes temporary changes which we use Git to undo)
+
+exec("lune run prepare-lune-version", { shell = true })
+
+exec("pesde install")
+exec("pesde publish --yes")
+
+exec("pesde install", { cwd = "src-t-standalone-pesde" })
+exec("pesde publish --yes", { cwd = "src-t-standalone-pesde" })
+
+exec("git reset --hard HEAD", { shell = true })
+
+-- Publish docs
+
 exec("lune run moonwave -- build --publish", { shell = true })
