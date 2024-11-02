@@ -22,6 +22,11 @@ Please leave feedback on the issues page. Thank you!
 1. [Install Wally](https://wally.run/install)
 2. Add `GreenTea = "corecii/greentea@0.4.9"` to your `wally.toml`
 
+### with pesde (for Rojo)
+1. [Install pesde](https://docs.pesde.daimond113.com/installation)
+2. Run `pesde add corecii/greentea`\
+   or add `GreenTea = { name = "corecii/greentea", version = "^0.4.9" }` to your `pesde.toml`
+
 ### Standalone (for non-Rojo)
 - Download from [the Releases page](https://github.com/corecii/greentea/releases)
 
@@ -174,9 +179,13 @@ end)
 
 You can include the `greentea-t-standalone` package as an easy, drop-in replacement for a codebase which already uses `t`. Just add it to your `wally.toml`:
 
-```toml
-t = "corecii/greentea-t-standalone@0.4.9"
-```
+> **with Wally (for Rojo)**
+> 1. [Install Wally](https://wally.run/install)
+> 2. Add `t = "corecii/greentea-t-standalone@0.4.9"` to your `wally.toml`
+
+> **with pesde (for Rojo)**
+> 1. [Install pesde](https://docs.pesde.daimond113.com/installation)
+> 2. Add `t = { name = "corecii/greentea_t_standalone", version = "^0.4.9" }` to your `pesde.toml`
 
 This package just exports `GreenTea.t` to make drop-in replacement easy.
 

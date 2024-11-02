@@ -79,6 +79,12 @@ exec({
 fs.removeFile("GreenTea.rbxm")
 
 exec("wally publish")
-exec("wally publish", { cwd = "src-t-standalone" })
+exec("wally publish", { cwd = "src-t-standalone-wally" })
+
+exec("pesde install")
+exec("pesde publish --yes")
+
+exec("pesde install", { cwd = "src-t-standalone-pesde" })
+exec("pesde publish --yes", { cwd = "src-t-standalone-pesde" })
 
 exec("lune run moonwave -- build --publish", { shell = true })

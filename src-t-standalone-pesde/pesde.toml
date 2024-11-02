@@ -1,0 +1,23 @@
+name = "corecii/greentea_t_standalone"
+version = "0.4.9"
+description = "A t-compatible API for GreenTea"
+authors = ["Corecii (Shae A.)  <github.com/corecii>"]
+repository = "https://github.com/Corecii/GreenTea"
+license = "MIT"
+
+includes = ["pesde.toml", "t.luau"]
+
+[target]
+environment = "roblox"
+lib = "t.luau"
+build_files = ["t.luau"]
+
+[scripts]
+roblox_sync_config_generator = "../.pesde/roblox_sync_config_generator.luau"
+sourcemap_generator = "../.pesde/sourcemap_generator.luau"
+
+[indices]
+default = "https://github.com/daimond113/pesde-index"
+
+[dependencies]
+GreenTea = { name = "corecii/greentea", version = "=0.4.9" }

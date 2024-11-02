@@ -4,6 +4,10 @@
 
 Nothing yet!
 
+## 0.4.9+pesde
+
+- Added pesde support. No code changes or package version changes.
+
 ## 0.4.9
 
 - Remove class which was removed from the engine.
