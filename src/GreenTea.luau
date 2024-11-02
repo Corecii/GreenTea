@@ -489,8 +489,16 @@ function Type.type(self: any): ...any
 	return self
 end
 
-local function isStringUnicode(str: string)
-	return pcall(utf8.graphemes, str) == true
+local isStringUnicode
+
+if utf8.graphemes then
+	function isStringUnicode(str: string)
+		return pcall(utf8.graphemes, str) == true
+	end
+else
+	function isStringUnicode(str: string)
+		return utf8.len(str) ~= nil
+	end
 end
 
 local function truncate(count: number, str: string)
@@ -500,6 +508,15 @@ local function truncate(count: number, str: string)
 
 	if #str < count then
 		return str
+	end
+
+	if not utf8.graphemes then
+		local offset = utf8.offset(str, count + 1)
+		if not offset then
+			return "<invalid unicode>"
+		end
+
+		return str:sub(1, offset - 1)
 	end
 
 	local rebuiltString = {}
@@ -1157,6 +1174,12 @@ function GreenTea.string(limits: {
 	if graphemeLengthRange and not byteLengthRange then
 		error(
 			"graphemes limit requires bytes limit. Graphemes have no upper limit on size, so if only graphemes limit is set, the byte limit is practically infinite. If you really want infinite byte length, set bytes to `[0, inf]`"
+		)
+	end
+
+	if graphemeLengthRange and not utf8.graphemes then
+		error(
+			"graphemes limit is not supported on your platform (your platform does not support the utf8.graphemes function)"
 		)
 	end
 
