@@ -22,7 +22,7 @@ Please leave feedback on the issues page. Thank you!
 1. [Install Wally](https://wally.run/install)
 2. Add `GreenTea = "corecii/greentea@0.4.9"` to your `wally.toml`
 
-### with pesde (for Rojo)
+### with pesde (for Rojo or Lune)
 1. [Install pesde](https://docs.pesde.daimond113.com/installation)
 2. Run `pesde add corecii/greentea`\
    or add `GreenTea = { name = "corecii/greentea", version = "^0.4.9" }` to your `pesde.toml`
@@ -170,6 +170,12 @@ SpawnVehicle:onServerEvent(function(player, params)
 	-- params is properly typed as { cat: { age: number, ...}, location: CFrame, ... }
 end)
 ```
+
+## Lune Support
+
+GreenTea has not been extensively tested on Lune.
+Some Roblox-specific typecheckers might not work, and there may be other issues.
+Please report any issues here: https://github.com/corecii/greentea/issues
 
 ## `t` Compatibility
 
