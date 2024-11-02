@@ -4,6 +4,11 @@
 
 Nothing yet!
 
+## 0.4.10
+
+- Handle missing `utf8.graphemes` function for Lune support.
+- Added lune support.
+
 ## 0.4.9+pesde
 
 - Added pesde support. No code changes or package version changes.

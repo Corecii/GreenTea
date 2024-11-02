@@ -1,5 +1,5 @@
 name = "corecii/greentea_t_standalone"
-version = "0.4.9"
+version = "0.4.10"
 description = "A t-compatible API for GreenTea"
 authors = ["Corecii (Shae A.)  <github.com/corecii>"]
 repository = "https://github.com/Corecii/GreenTea"
@@ -20,4 +20,4 @@ sourcemap_generator = "../.pesde/sourcemap_generator.luau"
 default = "https://github.com/daimond113/pesde-index"
 
 [dependencies]
-GreenTea = { name = "corecii/greentea", version = "=0.4.9" }
+GreenTea = { name = "corecii/greentea", version = "=0.4.10" }

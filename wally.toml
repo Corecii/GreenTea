@@ -1,6 +1,6 @@
 [package]
 name = "corecii/greentea"
-version = "0.4.9"
+version = "0.4.10"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
