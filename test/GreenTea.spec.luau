@@ -778,6 +778,10 @@ describe("Type", function()
 				gt.number():assert("hello")
 			end).toThrow(RegExp("expected number, got string"))
 		end)
+
+		it("should return the value", function()
+			expect(gt.number():assert(5)).toBe(5)
+		end)
 	end)
 end)
 
