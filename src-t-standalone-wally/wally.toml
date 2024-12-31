@@ -1,8 +1,8 @@
 [package]
 name = "corecii/greentea-t-standalone"
-version = "0.4.10"
+version = "0.4.11"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
 [dependencies]
-GreenTea = "corecii/greentea@=0.4.10"
+GreenTea = "corecii/greentea@=0.4.11"

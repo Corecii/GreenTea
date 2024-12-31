@@ -4,6 +4,12 @@
 
 Nothing yet!
 
+## 0.4.11
+
+- Add `GreenTea.wrapFn`, `GreenTea.wrapFnArgs`, and `GreenTea.wrapFnReturns`
+- Deprecate `Type.wrapFn`
+- Update various docs
+
 ## 0.4.10
 
 - Handle missing `utf8.graphemes` function for Lune support.

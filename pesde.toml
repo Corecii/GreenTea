@@ -1,5 +1,5 @@
 name = "corecii/greentea"
-version = "0.4.10"
+version = "0.4.11"
 description = "A runtime typechecker with Luau types, pretty errors, and inspection"
 authors = ["Corecii (Shae A.) <github.com/corecii>"]
 repository = "https://github.com/Corecii/GreenTea"
