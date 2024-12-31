@@ -97,6 +97,10 @@ export.build = GreenTea.build
 
 export.meta = GreenTea.meta
 
+export.wrapFn = GreenTea.wrapFn
+export.wrapFnArgs = GreenTea.wrapFnArgs
+export.wrapFnReturns = GreenTea.wrapFnReturns
+
 table.freeze(export)
 table.freeze(export.isA)
 table.freeze(export.t)
