@@ -2283,7 +2283,39 @@ function GreenTea.meta<T>(gtType: T, meta: { [string]: any }): T
 	return gtType :: any
 end
 
---- Wraps a function with type asserts for its input args and returns.
+--- Wraps a function with type asserts for its input args and returns.\
+--- For example:
+--- ```lua
+--- gt.wrapFn(
+---     gt.fn(
+---         gt.args(gt.string(), gt.number()),
+---         gt.returns(gt.number())
+---     ),
+---     function(arg1, arg2)
+---         --- Luau will properly infer arg types via above definition
+---         return 5
+---     end
+--- )
+--- ```
+--- Notes:
+--- * If you've stored the GreenTea type in a variable, and "built" it with `GreenTea.build`,
+---   then you will need to use `gtType:type()` here:
+---   ```lua
+---   local gtType = GreenTea.build(gt.string(), gt.number())
+---   gt.wrapFn(gtType:type(), function(arg1, arg2)
+---       return 5
+---   end)
+---   ```
+--- * If you're trying to add asserts to an unknown or dynamically-provided function, you may need to cast it to `any` first:
+---   ```lua
+---   gt.wrapFn(
+---       gt.fn(
+---           gt.args(gt.string(), gt.number()),
+---           gt.returns(gt.number())
+---       ),
+---       someFunction :: any
+---   )
+---   ```
 function GreenTea.wrapFn<T>(gtType: T, fn: T): T
 	local gtType: Type = GreenTea.typeof(gtType) :: any
 
@@ -2297,7 +2329,8 @@ function GreenTea.wrapFn<T>(gtType: T, fn: T): T
 	end :: any
 end
 
---- Wraps a function with type asserts for its input args only.
+--- Wraps a function with type asserts for its input args only.\
+--- See `GreenTea.wrapFn` for more information.
 function GreenTea.wrapFnArgs<T>(gtType: T, fn: T): T
 	local gtType: Type = GreenTea.typeof(gtType) :: any
 
@@ -2311,7 +2344,8 @@ function GreenTea.wrapFnArgs<T>(gtType: T, fn: T): T
 	end :: any
 end
 
---- Wraps a function with type asserts for its returns only.
+--- Wraps a function with type asserts for its returns only.\
+--- See `GreenTea.wrapFn` for more information.
 function GreenTea.wrapFnReturns<T>(gtType: T, fn: T): T
 	local gtType: Type = GreenTea.typeof(gtType) :: any
 
