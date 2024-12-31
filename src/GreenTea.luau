@@ -480,7 +480,7 @@ function Type.wrapFn<T>(self: Type, fn: T): T
 	end :: any
 end
 
---- In type definitions via `typeof(Type.type())`, returns the Luau type this
+--- In type definitions via `typeof(Type:type())`, returns the Luau type this
 --- GreenTea type represents.\
 --- At runtime, returns self. This allows you to compose complex GreenTea types
 --- by passing GreenTea.type() into a GreenTea constructor. (Only applies when
