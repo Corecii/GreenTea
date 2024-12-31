@@ -468,7 +468,11 @@ function Type.format(self: Type): string
 	return self._format({}, SOFT_MAX_LINE_LENGTH, {})
 end
 
---- Wraps a function with type asserts for its input args and returns.
+--- Wraps a function with type asserts for its input args and returns.\
+--- \
+--- This implementation is not ergonomic, and is easily confused with GreenTea.wrapFn.
+--- For this reason, Type.wrapFn will be removed in the next breaking release.\
+--- @deprecated v0.4.11 -- use `GreenTea.wrapFn` instead
 function Type.wrapFn<T>(self: Type, fn: T): T
 	assert(typeof(fn) == "function", "fn must be a function")
 	assert(self.fn ~= nil, "self must be a GreenTea.fn type")
