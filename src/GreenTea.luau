@@ -2200,7 +2200,9 @@ end
 --- At runtime this will error if the passed-in type is _not_ a GreenTea type.\
 --- This exists as a convenience function because `type :: GreenTea.Type` is usually
 --- not possible without an any cast like `(type :: any) :: GreenTea.Type`.\
---- This errors at runtime if the passed-in type is not a GreenTea type.
+--- \
+--- **Usually, you'll want to use `GreenTea.build` when making GreenTea types.**
+--- _`GreenTea.typecast` is specifically made for when you're doing tricky stuff with GreenTea types._
 function GreenTea.typecast(value: any): Type
 	assert(GreenTea.isGtType(value), "value must be a GreenTea type")
 
@@ -2233,7 +2235,9 @@ end
 export type BuiltType<T... = ...any> = Type & { __getType: () -> T... } & typeof(BuiltType)
 
 --- Typecasts a value to be a GreenTea type, with the type stored under the `type`
---- key so you can get the type with `typeof(result.type())`
+--- key so you can get the type with `typeof(result.type())`\
+--- \
+--- **This is the preferred way to build a GreenTea type for typical use.**
 function GreenTea.build<T...>(...: T...): BuiltType<T...>
 	local gtType: any
 
