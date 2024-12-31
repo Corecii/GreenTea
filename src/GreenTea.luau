@@ -2283,4 +2283,44 @@ function GreenTea.meta<T>(gtType: T, meta: { [string]: any }): T
 	return gtType :: any
 end
 
+--- Wraps a function with type asserts for its input args and returns.
+function GreenTea.wrapFn<T>(gtType: T, fn: T): T
+	local gtType: Type = GreenTea.typeof(gtType) :: any
+
+	assert(typeof(fn) == "function", "fn must be a function")
+	assert(gtType.fn ~= nil, "gtType must be a GreenTea.fn type")
+
+	return function(...: any)
+		gtType.fn.args:assert(...)
+
+		return gtType.fn.returns:assert(fn(...))
+	end :: any
+end
+
+--- Wraps a function with type asserts for its input args only.
+function GreenTea.wrapFnArgs<T>(gtType: T, fn: T): T
+	local gtType: Type = GreenTea.typeof(gtType) :: any
+
+	assert(typeof(fn) == "function", "fn must be a function")
+	assert(gtType.fn ~= nil, "gtType must be a GreenTea.fn type")
+
+	return function(...: any)
+		gtType.fn.args:assert(...)
+
+		return fn(...)
+	end :: any
+end
+
+--- Wraps a function with type asserts for its returns only.
+function GreenTea.wrapFnReturns<T>(gtType: T, fn: T): T
+	local gtType: Type = GreenTea.typeof(gtType) :: any
+
+	assert(typeof(fn) == "function", "fn must be a function")
+	assert(gtType.fn ~= nil, "gtType must be a GreenTea.fn type")
+
+	return function(...: any)
+		return gtType.fn.returns:assert(fn(...))
+	end :: any
+end
+
 return GreenTea
