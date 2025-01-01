@@ -51,7 +51,7 @@ local gt = require(path.to.GreenTea)
 local stringType = gt.build(gt.string())
 
 -- equivalent to takesString(value: string)
-local function takesString(value: typeof(stringType.type()))
+local function takesString(value: typeof(stringType:type()))
 	-- will error if value is not a string
 	stringType:assert(value)
 
@@ -72,7 +72,7 @@ local stringTypeRaw = gt.string()
 -- typechecker and a Luau type:
 
 -- give a name to the type
-type stringTypeLuau = typeof(stringTypeRaw.type())
+type stringTypeLuau = typeof(stringTypeRaw:type())
 
 -- cast the object to the runtime typechecker type it really is
 local stringTypeChecker = gt.typecast(stringTypeRaw)
@@ -115,7 +115,7 @@ local catType = gt.build(gt.table{
 }))
 
 -- catType == catTypeChecker
--- catTypeLuau == typeof(catTypeChecker.type())
+-- catTypeLuau == typeof(catTypeChecker:type())
 ```
 
 Using `build` is recommended because it makes this mostly type-safe:
